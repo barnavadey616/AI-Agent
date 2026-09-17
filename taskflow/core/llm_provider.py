@@ -102,7 +102,7 @@ class LLMProvider:
                 return LLMResponse(content=text, tool_calls=tool_calls)
             except Exception as e:
                 err_str = str(e)
-                logger.warning(f"Gemini call with model '{model_name}' failed: {e}. Trying next candidate...")
+                logger.info(f"Gemini candidate '{model_name}' busy or exhausted. Failing over to next candidate...")
                 last_exception = e
                 # Retry on quota exhaustion, high demand, or not found errors
                 if any(k in err_str for k in ["429", "RESOURCE_EXHAUSTED", "503", "UNAVAILABLE", "404", "NOT_FOUND"]):
