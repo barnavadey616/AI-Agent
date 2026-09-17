@@ -25,34 +25,50 @@ def process_natural_task(req: NaturalTaskRequest):
     """Process a natural language prompt, routing to the appropriate agent or knowledge base."""
     query = req.query.strip()
     q_lower = query.lower()
-    chosen_agent = req.target_agent or "auto"
+    target_agent = (req.target_agent or "auto").strip().lower()
 
+    # Detect if user is asking a question or seeking technical/coding explanations
     is_question = (
         any(q_lower.startswith(w) for w in [
             "what", "how", "why", "who", "when", "where", "which",
             "can you", "could you", "tell me", "explain", "is there",
-            "are there", "do you", "describe", "calculate", "solve"
+            "are there", "do you", "describe", "calculate", "solve",
+            "help", "write", "generate", "give me", "show me", "define"
         ])
         or "?" in query
+        or any(k in q_lower for k in [
+            "how to", "how do", "how can", "syntax for", "difference between",
+            "error:", "exception:", "bug in", "fix this", "solve java", "solve python"
+        ])
     )
 
-    # Route intelligently if auto
-    if chosen_agent == "auto":
-        if is_question:
-            # Questions should be answered by AI assistant with knowledge base grounding
-            chosen_agent = "custom"
-        elif q_lower.startswith("organize") or any(k in q_lower for k in ["sort files", "organize files", "clean inbox"]):
-            chosen_agent = "organizer"
-        elif q_lower.startswith("research") or any(k in q_lower for k in ["research brief", "market analysis", "brief on"]):
-            chosen_agent = "research"
-        elif q_lower.startswith("clean") or any(k in q_lower for k in ["scrub csv", "clean data", "profile data", "profile csv"]):
-            chosen_agent = "cleaner"
-        elif q_lower.startswith("triage") or any(k in q_lower for k in ["triage email", "triage tickets", "triage inquiries"]):
-            chosen_agent = "triage"
-        else:
-            chosen_agent = "custom"
+    # Detect explicit batch actions on files or specific workflow triggers
+    is_explicit_organize = (
+        not is_question and (
+            any(k in q_lower for k in ["organize files", "sort files", "clean inbox", "organize downloads", "sort inbox", "organize demo_data", "sort documents"])
+            or (q_lower.startswith("organize") and any(k in q_lower for k in ["inbox", "file", "folder", "download", "directory"]))
+        )
+    )
+    is_explicit_clean = (
+        not is_question and (
+            any(k in q_lower for k in [".csv", ".xlsx", "raw_sales", "sales dirty", "scrub csv", "clean dataset", "profile data", "profile csv"])
+            or (q_lower.startswith("clean") and any(k in q_lower for k in ["data", "csv", "sales", "file", "dataset", "table", "record"]))
+        )
+    )
+    is_explicit_research = (
+        not is_question and (
+            any(k in q_lower for k in ["research brief", "market analysis", "brief on", "synthesize report", "intelligence brief"])
+            or (q_lower.startswith("research") and not any(q_lower.startswith(w) for w in ["research how", "research why", "research can"]))
+        )
+    )
+    is_explicit_triage = (
+        not is_question and any(k in q_lower for k in [
+            "triage email", "triage tickets", "triage inquiries", "inquiry:", "ticket:", "subject:", "customer query"
+        ])
+    )
 
-    if chosen_agent == "organizer":
+    # 1. Dedicated File Organizer Action
+    if target_agent == "organizer" and is_explicit_organize or (target_agent == "auto" and is_explicit_organize):
         agent = FileOrganizerAgent()
         agent.add_listener(sync_event_emitter)
         res = agent.organize_directory()
@@ -63,7 +79,9 @@ def process_natural_task(req: NaturalTaskRequest):
             "records": res.get("records", []),
             "artifacts": ["organization_manifest.json", "organization_manifest.md"],
         }
-    elif chosen_agent == "research":
+
+    # 2. Dedicated Research Brief Action
+    elif target_agent == "research" and is_explicit_research or (target_agent == "auto" and is_explicit_research):
         agent = ResearchAgent()
         agent.add_listener(sync_event_emitter)
         topic = query
@@ -78,7 +96,9 @@ def process_natural_task(req: NaturalTaskRequest):
             "reply": f"**Executive Intelligence Brief Generated:**\n\n{res.get('full_content', '')}",
             "artifacts": [res.get("markdown_report"), res.get("html_report")],
         }
-    elif chosen_agent == "cleaner":
+
+    # 3. Dedicated Data Cleaner Action
+    elif target_agent == "cleaner" and is_explicit_clean or (target_agent == "auto" and is_explicit_clean):
         agent = DataCleanerAgent()
         agent.add_listener(sync_event_emitter)
         target_file = str(config.BASE_DIR / "demo_data" / "raw_sales_dirty.csv")
@@ -97,7 +117,9 @@ def process_natural_task(req: NaturalTaskRequest):
             ),
             "artifacts": [res.get("markdown_report"), res.get("html_report"), "cleaned_raw_sales_dirty.csv"],
         }
-    elif chosen_agent == "triage":
+
+    # 4. Dedicated Email Triage Action
+    elif target_agent == "triage" and is_explicit_triage or (target_agent == "auto" and is_explicit_triage):
         agent = EmailTriageAgent()
         agent.add_listener(sync_event_emitter)
         res = agent.triage_inquiries([
@@ -119,6 +141,8 @@ def process_natural_task(req: NaturalTaskRequest):
             ),
             "artifacts": [res.get("report_file")],
         }
+
+    # 5. Conversational AI Assistant (Answering Questions, Coding Help, General Queries)
     else:
         # Search knowledge base for grounding context
         kb_matches = default_knowledge_base.search(query, top_k=1)
@@ -130,16 +154,31 @@ def process_natural_task(req: NaturalTaskRequest):
                 f"{top_doc['full_content']}\n"
             )
 
+        # Adapt role based on selected target agent persona
+        if target_agent == "cleaner":
+            role_name = "Data Engineering & Analytics Specialist"
+        elif target_agent == "organizer":
+            role_name = "File Systems & Workflow Automation Specialist"
+        elif target_agent == "research":
+            role_name = "Research Briefing & Intelligence Specialist"
+        elif target_agent == "triage":
+            role_name = "Communications & Customer Operations Specialist"
+        else:
+            role_name = "Autonomous Task Automation & Problem Solving Assistant"
+
         system_instruction = (
-            "You are TaskFlow AI, an intelligent, helpful, and thorough autonomous assistant. "
-            "Answer user questions clearly, accurately, and politely. Format your answer in clean Markdown."
+            f"You are TaskFlow AI, an intelligent, helpful, and thorough {role_name}. "
+            "Answer the user's questions clearly, accurately, and politely. "
+            "If the user asks a coding or technical question (e.g. in Java, Python, SQL), "
+            "provide clean code examples, step-by-step explanations, and best practices. "
+            "Format your answer in clean Markdown."
         )
         if knowledge_context:
-            system_instruction += f"\nUse the following official company documentation to answer:\n{knowledge_context}"
+            system_instruction += f"\nUse the following official company documentation if relevant to ground your answer:\n{knowledge_context}"
 
         agent = BaseAgent(
             name="TaskFlowAutonomousAgent",
-            role="Autonomous Task Automation Assistant",
+            role=role_name,
             system_instruction=system_instruction,
             tools=[scan_directory, read_file_snippet, fetch_web_page, search_topics, profile_dataset, clean_dataset],
         )

@@ -75,7 +75,7 @@ class LLMProvider:
     ) -> LLMResponse:
         """Calls Google GenAI with model fallback across active Gemini models."""
         candidate_models = [self.model]
-        for fallback in ["gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-3.8-flash", "gemini-3.6-flash"]:
+        for fallback in ["gemini-3.5-flash-lite", "gemini-3.6-flash", "gemini-3.5-flash", "gemini-3.8-flash", "gemini-3.7-flash"]:
             if fallback not in candidate_models:
                 candidate_models.append(fallback)
 
@@ -200,6 +200,51 @@ I am your **Autonomous Multi-Agent Automation Hub**. I can help you automate rep
 Ask me any question or instruct me to automate a workflow!""",
                 tool_calls=[]
             )
+
+        # Programming & Technical queries handling in simulation
+        if any(w in lower_prompt for w in ["java", "python", "javascript", "c++", "coding", "algorithm", "debug", "error", "exception", "solve"]):
+            if "java" in lower_prompt:
+                return LLMResponse(
+                    content="""### How to Solve Java Problems & Write Clean Java Code
+
+To solve problems effectively in Java—whether you are learning the language, debugging code, or building an application—follow this structured roadmap:
+
+---
+
+#### 1. Setting Up Your Environment
+* **Install JDK (Java Development Kit):** Ensure a modern JDK (such as OpenJDK 17 or 21) is installed. Verify with `java -version` and `javac -version`.
+* **Use a Modern IDE:** Use **IntelliJ IDEA**, **Eclipse**, or **VS Code** with the Java Extension Pack for auto-completion, linting, and interactive debugging.
+* **Build Systems:** Use **Maven** or **Gradle** to manage external libraries and dependencies.
+
+---
+
+#### 2. Solving Algorithmic & Logic Problems
+1. **Understand Constraints:** Identify input types, memory/time limits, and edge cases (`null`, negative numbers, empty collections).
+2. **Select Proper Data Structures (`java.util`):**
+   * Use `ArrayList` for dynamic arrays.
+   * Use `HashMap` or `HashSet` for $O(1)$ fast lookups.
+   * Use `PriorityQueue` for min/max heaps.
+   * Use `StringBuilder` for heavy string concatenations.
+3. **Trace Step-by-Step:** Write pseudocode and trace test cases before writing full Java methods.
+
+---
+
+#### 3. Common Java Errors & How to Fix Them
+* **`NullPointerException`:** Occurs when invoking a method or accessing a field on an uninitialized object. *Fix:* Check `if (obj != null)` or use `Optional<T>`.
+* **`ArrayIndexOutOfBoundsException`:** Accessing an invalid index. *Fix:* Check that `index >= 0 && index < array.length`.
+* **`ClassNotFoundException` / `NoClassDefFoundError`:** Dependency missing in classpath. *Fix:* Verify your `pom.xml` (Maven) or `build.gradle`.
+
+---
+
+#### Need help with a specific problem?
+Please reply with your specific code snippet or error message, and I will write the complete Java solution for you!""",
+                    tool_calls=[]
+                )
+            else:
+                return LLMResponse(
+                    content=f"### Technical Solution Guide\n\nI have analyzed your programming request: **'{prompt}'**.\n\nTo resolve this problem:\n1. Verify your syntax and dependencies.\n2. Break the logic down into reusable helper functions.\n3. Test with edge cases (empty inputs, boundaries).\n\nPlease provide your specific code or error trace for an exact line-by-line fix!",
+                    tool_calls=[]
+                )
 
         # Default general response
         return LLMResponse(

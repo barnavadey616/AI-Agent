@@ -298,6 +298,8 @@ function switchView(viewName) {
 function useSuggestion(text) {
   const input = document.getElementById("chatInputText");
   input.value = text;
+  const agentSelector = document.getElementById("chatTargetAgent");
+  if (agentSelector) agentSelector.value = "auto";
   submitChatTask();
 }
 
@@ -507,6 +509,8 @@ async function fetchStatus() {
     const data = await safeJsonFetch("/api/status");
     const modeEl = document.getElementById("systemModeText");
     if (modeEl) modeEl.textContent = data.mode;
+    const badgeEl = document.getElementById("chatModelBadge");
+    if (badgeEl && data.model) badgeEl.textContent = `${data.model} • ReAct Tools`;
     const watchEl = document.getElementById("watcherCheckbox");
     if (watchEl) watchEl.checked = data.watcher_active;
     updateBackendIndicator("connected");
