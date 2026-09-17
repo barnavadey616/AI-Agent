@@ -1,0 +1,13 @@
+TransactionID,Date,CustomerName,Category,Quantity,UnitPrice,TotalAmount,Region
+1001,2026-08-01,Alice Johnson,Electronics,2,120.00,240.00,North
+1002,2026-08-02,Bob Smith,  Furniture  ,1,450.00,450.00,West
+1002,2026-08-02,Bob Smith,  Furniture  ,1,450.00,450.00,West
+1003,2026-08-03,Charlie Brown,electronics,-3,55.00,165.00,East
+1004,2026-08-04,Diana Prince,Office Supplies,10,12.50,,South
+1005,2026-08-05,Evan Wright,,5,25.00,125.00,North
+1006,2026-08-06,Fiona Gallagher,Electronics,1,850.00,850.00,
+1007,2026-08-07,George Clark,Furniture,-2,190.00,380.00,West
+1008,2026-08-08,Hannah Abbott,Office Supplies,4,15.00,60.00,East
+1008,2026-08-08,Hannah Abbott,Office Supplies,4,15.00,60.00,East
+1009,2026-08-09,Ian Malcolm,Electronics,3,,360.00,South
+1010,2026-08-10,Julia Roberts,Furniture,2,310.00,620.00,West

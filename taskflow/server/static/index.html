@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskFlow AI — Autonomous Multi-Agent Automation Hub</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+      <div class="brand">
+        <div class="logo-icon">⚡</div>
+        <div>
+          <h1>TaskFlow AI</h1>
+          <span class="tagline">Autonomous Repetitive Task Automation</span>
+        </div>
+      </div>
+
+      <!-- View Switcher Tabs -->
+      <nav class="view-tabs">
+        <button class="tab-btn active" id="tabChat" onclick="switchView('chat')">
+          <span class="tab-icon">💬</span>
+          <span>Task Search (ChatGPT)</span>
+        </button>
+        <button class="tab-btn" id="tabDashboard" onclick="switchView('dashboard')">
+          <span class="tab-icon">🎛️</span>
+          <span>Agent Grid Hub</span>
+        </button>
+        <button class="tab-btn" id="tabArtifacts" onclick="switchView('artifacts')">
+          <span class="tab-icon">📁</span>
+          <span>Artifacts & Reports</span>
+        </button>
+        <button class="tab-btn" id="tabKnowledge" onclick="switchView('knowledge')">
+          <span class="tab-icon">🧠</span>
+          <span>Knowledge Base</span>
+        </button>
+      </nav>
+
+      <div class="nav-controls">
+        <div class="status-pill" id="systemStatus">
+          <span class="status-dot"></span>
+          <span id="systemModeText">Connecting...</span>
+        </div>
+        <div class="watcher-toggle">
+          <label class="switch-label">Auto-Watcher</label>
+          <label class="switch">
+            <input type="checkbox" id="watcherCheckbox">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+    </header>
+
+    <!-- VIEW 1: ChatGPT-Style Task Search & Conversation Space -->
+    <section class="view-section active" id="viewChat">
+      <div class="chatgpt-container">
+        <!-- Hero Section (Shown initially or above conversation) -->
+        <div class="chatgpt-hero" id="chatHero">
+          <div class="hero-badge">⚡ Autonomous Agent Engine</div>
+          <h2>What repetitive task should I automate?</h2>
+          <p>Instruct the AI agent in natural language. TaskFlow analyzes your intent, selects specialized tools, and outputs clean deliverables.</p>
+        </div>
+
+        <!-- Chat Conversation Messages -->
+        <div class="chatgpt-messages" id="chatMessages">
+          <!-- Initial welcome bubble -->
+          <div class="chat-msg assistant">
+            <div class="msg-avatar">⚡</div>
+            <div class="msg-content">
+              <p>Hello! I am <strong>TaskFlow AI</strong>. Describe any repetitive digital workflow you want to automate, or select one of the suggested prompts below.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ChatGPT Input Box Area -->
+        <div class="chatgpt-input-wrapper">
+          <div class="chatgpt-input-box">
+            <!-- Top Controls in Input Bar -->
+            <div class="input-header-bar">
+              <div class="agent-selector">
+                <span class="selector-label">Target Agent:</span>
+                <select id="chatTargetAgent">
+                  <option value="auto">✨ Auto-Detect Agent</option>
+                  <option value="organizer">📂 Document & Inbox Organizer</option>
+                  <option value="research">🌐 Research Briefing Agent</option>
+                  <option value="cleaner">📊 Data Cleaner & Insights</option>
+                  <option value="triage">✉️ Email & Inquiry Triage</option>
+                </select>
+              </div>
+              <div class="model-badge" id="chatModelBadge">Gemini 3.5 Flash • ReAct Tools</div>
+            </div>
+
+            <!-- Textarea -->
+            <textarea 
+              id="chatInputText" 
+              rows="2" 
+              placeholder="Ask TaskFlow to automate a task... (e.g. 'Organize messy files in inbox', 'Research AI agent production benchmarks 2026', 'Clean dirty sales CSV')"></textarea>
+
+            <!-- Bottom Actions -->
+            <div class="input-footer-bar">
+              <div class="capability-tags">
+                <span class="cap-tag">📁 FileSystem</span>
+                <span class="cap-tag">🌐 Web & Research</span>
+                <span class="cap-tag">📊 Pandas Data</span>
+                <span class="cap-tag">✉️ Communications</span>
+              </div>
+              <button class="send-btn" id="chatSendBtn" onclick="submitChatTask()" title="Send task (Enter)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="19" x2="12" y2="5"></line>
+                  <polyline points="5 12 12 5 19 12"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Suggestion Cards -->
+          <div class="suggestion-chips" id="suggestionChips">
+            <button class="chip" onclick="useSuggestion('Organize all unfiled receipts, bills, and contracts in demo_data/inbox')">
+              <span class="chip-icon">📂</span>
+              <div class="chip-text">
+                <strong>Organize Files</strong>
+                <span>Sort unfiled receipts & contracts</span>
+              </div>
+            </button>
+            <button class="chip" onclick="useSuggestion('Research latest AI agent framework advancements and production automation in 2026')">
+              <span class="chip-icon">🌐</span>
+              <div class="chip-text">
+                <strong>Research Brief</strong>
+                <span>AI agent production benchmarks</span>
+              </div>
+            </button>
+            <button class="chip" onclick="useSuggestion('Profile and clean demo_data/raw_sales_dirty.csv, fix negative quantities and missing values')">
+              <span class="chip-icon">📊</span>
+              <div class="chip-text">
+                <strong>Clean Dataset</strong>
+                <span>Scrub anomalies in sales CSV</span>
+              </div>
+            </button>
+            <button class="chip" onclick="useSuggestion('Triage urgent customer queries and draft professional email responses')">
+              <span class="chip-icon">✉️</span>
+              <div class="chip-text">
+                <strong>Triage Inquiries</strong>
+                <span>Classify tickets & draft replies</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: Agent Grid Hub (Original Cards View) -->
+    <section class="view-section" id="viewDashboard">
+      <main class="dashboard-grid">
+        <!-- Left Column: Automation Launchers -->
+        <section class="launchers-column">
+          <div class="section-title">
+            <h2>Task Automation Agents</h2>
+            <p>Deploy specialized autonomous agents to eliminate manual and repetitive digital tasks.</p>
+          </div>
+
+          <div class="cards-grid">
+            <!-- Card 1: File Organizer -->
+            <div class="agent-card" id="cardOrganizer">
+              <div class="card-icon" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">📂</div>
+              <div class="card-body">
+                <h3>Document & Inbox Organizer</h3>
+                <p>Scans unorganized downloads, inspects content, standardizes filenames with dates, sorts into categories, and writes an audit manifest.</p>
+                <div class="card-inputs">
+                  <input type="text" id="organizerSource" value="demo_data/inbox" placeholder="Source directory">
+                </div>
+                <button class="btn btn-primary" onclick="triggerOrganizer()">Run File Organizer</button>
+              </div>
+            </div>
+
+            <!-- Card 2: Research Agent -->
+            <div class="agent-card" id="cardResearch">
+              <div class="card-icon" style="background: rgba(139, 92, 246, 0.15); color: #a78bfa;">🌐</div>
+              <div class="card-body">
+                <h3>Autonomous Research Briefing</h3>
+                <p>Queries authoritative web sources, detects key industry trends, extracts quotes, and compiles formatted Executive Briefs in Markdown & HTML.</p>
+                <div class="card-inputs">
+                  <input type="text" id="researchTopic" value="AI Agent Frameworks & Production Automation 2026" placeholder="Research topic or query">
+                </div>
+                <button class="btn btn-purple" onclick="triggerResearch()">Synthesize Intelligence Brief</button>
+              </div>
+            </div>
+
+            <!-- Card 3: Data Cleaner -->
+            <div class="agent-card" id="cardDataClean">
+              <div class="card-icon" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">📊</div>
+              <div class="card-body">
+                <h3>Data Quality & Anomaly Cleaner</h3>
+                <p>Profiles dirty CSV/Excel datasets, eliminates duplicate records, imputes null values, standardizes outliers, and writes an Executive Insights Report.</p>
+                <div class="card-inputs">
+                  <input type="text" id="dataCleanFile" value="demo_data/raw_sales_dirty.csv" placeholder="CSV file path">
+                </div>
+                <button class="btn btn-emerald" onclick="triggerDataClean()">Scrub & Analyze Dataset</button>
+              </div>
+            </div>
+
+            <!-- Card 4: Email Triage -->
+            <div class="agent-card" id="cardEmailTriage">
+              <div class="card-icon" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">✉️</div>
+              <div class="card-body">
+                <h3>Email & Ticket Triage Matrix</h3>
+                <p>Classifies incoming inquiries by urgency, intent, and sentiment. Prepares customized response drafts and builds an actionable escalation log.</p>
+                <button class="btn btn-amber" onclick="triggerEmailTriage()">Triage Sample Inquiries</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Custom Prompt Runner -->
+          <div class="custom-prompt-card">
+            <h3>⚡ Custom Task Automation Agent</h3>
+            <p>Execute custom instructions with autonomous ReAct reasoning and dynamic tool execution.</p>
+            <div class="prompt-box">
+              <textarea id="customPrompt" rows="2" placeholder="e.g. Analyze the sales dataset, find anomalies, and summarize top categories..."></textarea>
+              <button class="btn btn-primary" onclick="triggerCustomTask()">Execute Task</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right Column: Live Console & Artifacts -->
+        <section class="output-column">
+          <!-- Live Execution Monitor -->
+          <div class="panel live-monitor-panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <span class="pulse-dot"></span>
+                <span>Live Agent Execution Stream</span>
+              </div>
+              <button class="btn-sm" onclick="clearLogs()">Clear Console</button>
+            </div>
+            <div class="console-box" id="consoleBox">
+              <div class="log-line info">
+                <span class="time">[System]</span> Connected to TaskFlow Agent Hub. Ready to automate repetitive workflows.
+              </div>
+            </div>
+          </div>
+
+          <!-- Generated Artifacts & Reports Gallery -->
+          <div class="panel artifacts-panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <span>📁 Generated Artifacts & Reports</span>
+              </div>
+              <button class="btn-sm" onclick="loadArtifacts()">Refresh</button>
+            </div>
+            <div class="artifacts-list" id="artifactsList">
+              <div class="empty-state">No artifacts generated yet. Run an automation agent to see reports and files here.</div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </section>
+
+    <!-- VIEW 3: Dedicated Full Artifacts & Reports Gallery -->
+    <section class="view-section" id="viewArtifacts">
+      <div class="artifacts-page-container">
+        <div class="section-title">
+          <h2>📁 Artifacts & Reports Repository</h2>
+          <p>Browse, inspect, and download all intelligence briefs, cleaned datasets, and audit logs created by TaskFlow AI agents.</p>
+        </div>
+        <div class="artifacts-full-grid" id="artifactsFullGrid">
+          <div class="empty-state">Loading artifacts...</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
