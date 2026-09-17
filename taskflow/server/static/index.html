@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>F.R.Y.D.A.Y — Autonomous Multi-Agent Automation Hub</title>
-  <link rel="stylesheet" href="style.css?v=20260918_v7">
+  <link rel="stylesheet" href="style.css?v=20260918_v8">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -242,11 +242,11 @@
 
       <!-- ChatGPT-Style Left Sidebar matching screenshot -->
       <aside class="app-sidebar" id="appSidebar">
-        <!-- Top Navigation Actions matching screenshot -->
+        <!-- Top Navigation Action: New Chat -->
         <div class="sidebar-top-nav">
           <button class="sidebar-nav-item new-chat-btn" onclick="startNewChat()" title="Start a new chat">
             <span class="sidebar-icon">
-              <!-- Compose icon -->
+              <!-- Compose / edit pencil icon -->
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -254,80 +254,16 @@
             </span>
             <span class="sidebar-label">New chat</span>
           </button>
-
-          <button class="sidebar-nav-item" onclick="openSidebarModal('library')" title="Library">
-            <span class="sidebar-icon">
-              <!-- Books / Library icon matching screenshot -->
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-              </svg>
-            </span>
-            <span class="sidebar-label">Library</span>
-          </button>
-
-          <button class="sidebar-nav-item" onclick="openSidebarModal('projects')" title="Projects">
-            <span class="sidebar-icon">
-              <!-- Folder / Projects icon matching screenshot -->
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-              </svg>
-            </span>
-            <span class="sidebar-label">Projects</span>
-          </button>
-
-          <button class="sidebar-nav-item" onclick="openSidebarModal('scheduled')" title="Scheduled">
-            <span class="sidebar-icon">
-              <!-- Clock / Scheduled icon matching screenshot -->
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-              </svg>
-            </span>
-            <span class="sidebar-label">Scheduled</span>
-          </button>
-
-          <button class="sidebar-nav-item" onclick="openSidebarModal('plugins')" title="Plugins">
-            <span class="sidebar-icon">
-              <!-- Target / Plugins icon matching screenshot -->
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="3"></circle>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-              </svg>
-            </span>
-            <span class="sidebar-label">Plugins</span>
-          </button>
-
-          <button class="sidebar-nav-item" onclick="openSidebarModal('codex')" title="Codex">
-            <span class="sidebar-icon">
-              <!-- Codex / brain cloud icon matching screenshot -->
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
-              </svg>
-            </span>
-            <span class="sidebar-label">Codex</span>
-          </button>
-
-          <button class="sidebar-nav-item" onclick="openSidebarModal('more')" title="More">
-            <span class="sidebar-icon">
-              <!-- Ellipsis icon matching screenshot -->
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <circle cx="5" cy="12" r="2"></circle>
-                <circle cx="12" cy="12" r="2"></circle>
-                <circle cx="19" cy="12" r="2"></circle>
-              </svg>
-            </span>
-            <span class="sidebar-label">More</span>
-          </button>
         </div>
 
-        <!-- Recents History Section matching screenshot -->
+        <!-- Recent Searches List (Only displays searches made by user) -->
         <div class="sidebar-recents-section">
           <div class="recents-header">
-            <span>Recents</span>
+            <span>Recent Searches</span>
+            <button class="btn-clear-all-recents" id="btnClearAllRecents" onclick="clearAllChatHistory()" title="Clear all recent searches" style="display: none;">Clear all</button>
           </div>
           <div class="recents-list" id="recentsList">
-            <!-- Dynamically populated from localStorage -->
+            <!-- Dynamically populated only when user searches -->
           </div>
         </div>
       </aside>
@@ -968,6 +904,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260918_v7"></script>
+  <script src="app.js?v=20260918_v8"></script>
 </body>
 </html>
