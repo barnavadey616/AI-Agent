@@ -77,6 +77,21 @@ body {
   position: relative;
 }
 
+/* Subtle Cybernetic Grid Pattern Overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(0, 242, 254, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 242, 254, 0.035) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(ellipse at 50% 30%, black 45%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 30%, black 45%, transparent 85%);
+  pointer-events: none;
+  z-index: 0;
+}
+
 /* ==========================================================================
    Ambient Glowing Background Orbs (Futuristic Cyber Lighting)
    ========================================================================== */
