@@ -42,6 +42,11 @@
       </nav>
 
       <div class="nav-controls">
+        <button class="backend-btn" id="btnBackendConfig" onclick="openBackendModal()" title="Configure Backend API Server (Render)">
+          <span class="backend-btn-icon">⚙️</span>
+          <span class="backend-btn-text">Backend API</span>
+          <span class="backend-dot" id="backendDot"></span>
+        </button>
         <div class="status-pill" id="systemStatus">
           <span class="status-dot"></span>
           <span id="systemModeText">Connecting...</span>
@@ -59,6 +64,18 @@
     <!-- VIEW 1: ChatGPT-Style Task Search & Conversation Space -->
     <section class="view-section active" id="viewChat">
       <div class="chatgpt-container">
+        <!-- Backend Alert Banner (shown when frontend runs on Netlify without connected backend) -->
+        <div class="backend-banner" id="backendBanner" style="display: none;">
+          <div class="banner-left">
+            <span class="banner-icon">⚠️</span>
+            <div class="banner-text">
+              <strong>Backend Server Disconnected:</strong>
+              <span>Frontend is running on Netlify. Connect your Render Backend URL to execute AI agent tasks.</span>
+            </div>
+          </div>
+          <button class="btn btn-sm btn-primary" onclick="openBackendModal()">Connect Render API</button>
+        </div>
+
         <!-- Hero Section (Shown initially or above conversation) -->
         <div class="chatgpt-hero" id="chatHero">
           <div class="hero-badge">⚡ Autonomous Agent Engine</div>
@@ -272,6 +289,97 @@
       </div>
     </section>
 
+    <!-- VIEW 4: Grounded Knowledge Base Explorer -->
+    <section class="view-section" id="viewKnowledge">
+      <div class="knowledge-page-container">
+        <div class="section-title">
+          <h2>🧠 Grounded Knowledge Base (RAG)</h2>
+          <p>Domain knowledge repository that grounds AI agent answers and automations in factual enterprise context.</p>
+        </div>
+
+        <div class="knowledge-grid">
+          <!-- Left: Search & Query Tester -->
+          <div class="panel knowledge-search-panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <span>🔍 Semantic Search Query</span>
+              </div>
+            </div>
+            <div class="knowledge-search-body">
+              <div class="search-input-group">
+                <input type="text" id="knowledgeSearchInput" placeholder="e.g. What is TaskFlow AI? or What is the refund policy?">
+                <button class="btn btn-primary" onclick="searchKnowledgeBase()">Search RAG</button>
+              </div>
+              <div class="knowledge-search-results" id="knowledgeSearchResults">
+                <div class="empty-state">Enter a query above to test semantic vector and TF-IDF knowledge retrieval.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Indexed Documents & Add Document -->
+          <div class="panel knowledge-docs-panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <span>📚 Indexed Documents</span>
+              </div>
+              <button class="btn-sm" onclick="loadKnowledgeDocuments()">Refresh</button>
+            </div>
+            <div class="knowledge-docs-list" id="knowledgeDocsList">
+              <div class="empty-state">Loading knowledge documents...</div>
+            </div>
+
+            <!-- Add Document Drawer -->
+            <div class="add-doc-section">
+              <h4>Add New Document</h4>
+              <input type="text" id="newDocTitle" placeholder="Document Title (e.g. Security Compliance Policy)">
+              <textarea id="newDocText" rows="3" placeholder="Document text content..."></textarea>
+              <input type="text" id="newDocTags" placeholder="Tags (comma-separated, e.g. security, policy)">
+              <button class="btn btn-emerald btn-sm" onclick="addKnowledgeDocument()">Index New Document</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Backend API Configuration Modal -->
+  <div class="modal-overlay" id="backendModal" style="display: none;" onclick="handleModalOverlayClick(event)">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">⚙️</span>
+          <div>
+            <h3>Backend Server Configuration</h3>
+            <p class="modal-subtitle">Connect your deployed Python FastAPI / Render backend</p>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeBackendModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="info-callout">
+          <p>
+            When hosted on <strong>Netlify</strong>, the static frontend needs to connect to your live Python AI Agent backend (deployed on <strong>Render</strong>).
+          </p>
+        </div>
+        <div class="form-group">
+          <label for="backendUrlInput"><strong>Render Backend URL:</strong></label>
+          <input 
+            type="url" 
+            id="backendUrlInput" 
+            placeholder="https://ai-agent-xxxx.onrender.com" 
+            autocomplete="off"
+            spellcheck="false"
+          >
+          <span class="input-hint">Copy the <code>onrender.com</code> URL from your Render dashboard.</span>
+        </div>
+        <div class="test-feedback" id="backendTestFeedback" style="display: none;"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="resetBackendToLocal()">Reset to Localhost</button>
+        <button class="btn btn-primary" id="btnSaveBackend" onclick="saveAndTestBackendUrl()">Test & Save Connection</button>
+      </div>
+    </div>
   </div>
 
   <script src="app.js"></script>
