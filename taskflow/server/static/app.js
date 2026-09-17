@@ -277,21 +277,16 @@ function switchView(viewName) {
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
   document.querySelectorAll(".view-section").forEach(s => s.classList.remove("active"));
 
-  if (viewName === "chat") {
-    document.getElementById("tabChat").classList.add("active");
-    document.getElementById("viewChat").classList.add("active");
-  } else if (viewName === "dashboard") {
-    document.getElementById("tabDashboard").classList.add("active");
-    document.getElementById("viewDashboard").classList.add("active");
-  } else if (viewName === "artifacts") {
-    document.getElementById("tabArtifacts").classList.add("active");
-    document.getElementById("viewArtifacts").classList.add("active");
-    loadArtifacts();
-  } else if (viewName === "knowledge") {
-    document.getElementById("tabKnowledge").classList.add("active");
-    document.getElementById("viewKnowledge").classList.add("active");
-    loadKnowledgeDocuments();
-  }
+  const tabId = "tab" + viewName.charAt(0).toUpperCase() + viewName.slice(1);
+  const viewId = "view" + viewName.charAt(0).toUpperCase() + viewName.slice(1);
+  const tabEl = document.getElementById(tabId);
+  const viewEl = document.getElementById(viewId);
+
+  if (tabEl) tabEl.classList.add("active");
+  if (viewEl) viewEl.classList.add("active");
+
+  if (viewName === "artifacts") loadArtifacts();
+  if (viewName === "knowledge") loadKnowledgeDocuments();
 }
 
 // Suggestion chip shortcut

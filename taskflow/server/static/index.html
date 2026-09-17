@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>F.R.Y.D.A.Y — Autonomous Multi-Agent Automation Hub</title>
-  <link rel="stylesheet" href="style.css?v=20260918_v4">
+  <link rel="stylesheet" href="style.css?v=20260918_v5">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -212,42 +212,11 @@
         </div>
       </div>
 
-      <!-- View Switcher Tabs -->
-      <nav class="view-tabs">
-        <button class="tab-btn active" id="tabChat" onclick="switchView('chat')">
+      <!-- Active Neural Mode Indicator -->
+      <div class="view-tabs">
+        <div class="tab-btn active" id="tabChat" style="cursor: default;">
           <span class="tab-icon">💬</span>
           <span>Task Search (ChatGPT)</span>
-        </button>
-        <button class="tab-btn" id="tabDashboard" onclick="switchView('dashboard')">
-          <span class="tab-icon">🎛️</span>
-          <span>Agent Grid Hub</span>
-        </button>
-        <button class="tab-btn" id="tabArtifacts" onclick="switchView('artifacts')">
-          <span class="tab-icon">📁</span>
-          <span>Artifacts & Reports</span>
-        </button>
-        <button class="tab-btn" id="tabKnowledge" onclick="switchView('knowledge')">
-          <span class="tab-icon">🧠</span>
-          <span>Knowledge Base</span>
-        </button>
-      </nav>
-
-      <div class="nav-controls">
-        <button class="backend-btn" id="btnBackendConfig" onclick="openBackendModal()" title="Configure Backend API Server (Render)">
-          <span class="backend-btn-icon">⚙️</span>
-          <span class="backend-btn-text">Backend API</span>
-          <span class="backend-dot" id="backendDot"></span>
-        </button>
-        <div class="status-pill" id="systemStatus">
-          <span class="status-dot"></span>
-          <span id="systemModeText">Connecting...</span>
-        </div>
-        <div class="watcher-toggle">
-          <label class="switch-label">Auto-Watcher</label>
-          <label class="switch">
-            <input type="checkbox" id="watcherCheckbox">
-            <span class="slider round"></span>
-          </label>
         </div>
       </div>
     </header>
@@ -630,6 +599,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260918_v4"></script>
+  <script src="app.js?v=20260918_v5"></script>
 </body>
 </html>
