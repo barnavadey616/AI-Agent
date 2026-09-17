@@ -63,7 +63,8 @@ def process_natural_task(req: NaturalTaskRequest):
     )
     is_explicit_triage = (
         not is_question and any(k in q_lower for k in [
-            "triage email", "triage tickets", "triage inquiries", "inquiry:", "ticket:", "subject:", "customer query"
+            "triage email", "triage tickets", "triage inquiries", "triage urgent", "triage customer",
+            "inquiry:", "ticket:", "subject:", "customer query", "customer queries"
         ])
     )
 
