@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>F.R.Y.D.A.Y — Autonomous Multi-Agent Automation Hub</title>
-  <link rel="stylesheet" href="style.css?v=20260918_v3">
+  <link rel="stylesheet" href="style.css?v=20260918_v4">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -14,6 +14,189 @@
   <div class="ambient-glow-orb orb-1"></div>
   <div class="ambient-glow-orb orb-2"></div>
   <div class="ambient-glow-orb orb-3"></div>
+
+  <!-- Giant Spinning Iron Man Arc Reactor Background (Mark LXXXV F.R.Y.D.A.Y Core) -->
+  <div class="background-arc-reactor-container" aria-hidden="true">
+    <svg class="arc-reactor-svg" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- High-Intensity Cyber & Unibeam Glow Filters -->
+        <filter id="arcCoreGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur1" />
+          <feGaussianBlur in="SourceGraphic" stdDeviation="16" result="blur2" />
+          <feGaussianBlur in="SourceGraphic" stdDeviation="32" result="blur3" />
+          <feMerge>
+            <feMergeNode in="blur3" />
+            <feMergeNode in="blur2" />
+            <feMergeNode in="blur1" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+        
+        <filter id="arcCyanGlow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+
+        <!-- Unibeam Fusion Radial Gradients -->
+        <radialGradient id="unibeamCore" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
+          <stop offset="25%" stop-color="#a5f3fc" stop-opacity="0.95" />
+          <stop offset="55%" stop-color="#00f2fe" stop-opacity="0.8" />
+          <stop offset="85%" stop-color="#0284c7" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#0369a1" stop-opacity="0" />
+        </radialGradient>
+
+        <radialGradient id="plasmaAura" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.35" />
+          <stop offset="60%" stop-color="#0284c7" stop-opacity="0.15" />
+          <stop offset="100%" stop-color="#030712" stop-opacity="0" />
+        </radialGradient>
+
+        <linearGradient id="copperCoil" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fbbf24" />
+          <stop offset="45%" stop-color="#f59e0b" />
+          <stop offset="75%" stop-color="#d97706" />
+          <stop offset="100%" stop-color="#92400e" />
+        </linearGradient>
+
+        <!-- Circular Stark Telemetry Arc Paths -->
+        <path id="starkTextArc" d="M 400,400 m -215,0 a 215,215 0 1,1 430,0 a 215,215 0 1,1 -430,0" fill="none" />
+        <path id="starkTextArc2" d="M 400,400 m -250,0 a 250,250 0 1,1 500,0 a 250,250 0 1,1 -500,0" fill="none" />
+
+        <!-- 1 Inductive Copper Solenoid Coil Template (Used 10 Times) -->
+        <g id="arcCoilBlock">
+          <!-- Housing bracket -->
+          <rect x="-22" y="-344" width="44" height="58" rx="6" fill="#0b1329" stroke="#00f2fe" stroke-width="1.5" />
+          <!-- Copper wire windings -->
+          <rect x="-18" y="-339" width="36" height="7" rx="2" fill="url(#copperCoil)" />
+          <rect x="-18" y="-328" width="36" height="7" rx="2" fill="url(#copperCoil)" />
+          <rect x="-18" y="-317" width="36" height="7" rx="2" fill="url(#copperCoil)" />
+          <rect x="-18" y="-306" width="36" height="7" rx="2" fill="url(#copperCoil)" />
+          <rect x="-18" y="-295" width="36" height="5" rx="2" fill="url(#copperCoil)" />
+          <!-- High-energy filament conduit inside each coil -->
+          <line x1="0" y1="-341" x2="0" y2="-289" stroke="#ffffff" stroke-width="2.5" filter="url(#arcCyanGlow)" />
+          <!-- Metallic side mounts -->
+          <rect x="-25" y="-321" width="5" height="12" rx="1" fill="#64748b" />
+          <rect x="20" y="-321" width="5" height="12" rx="1" fill="#64748b" />
+        </g>
+      </defs>
+
+      <!-- Background Plasma Ambient Field -->
+      <circle cx="400" cy="400" r="390" fill="url(#plasmaAura)" />
+
+      <!-- RING 1: Static Outer HUD Calibration & Horizon Crosshairs -->
+      <g class="arc-static-hud">
+        <line x1="30" y1="400" x2="770" y2="400" stroke="rgba(0, 242, 254, 0.18)" stroke-width="1" stroke-dasharray="6, 12" />
+        <line x1="400" y1="30" x2="400" y2="770" stroke="rgba(0, 242, 254, 0.18)" stroke-width="1" stroke-dasharray="6, 12" />
+        <circle cx="400" cy="400" r="380" fill="none" stroke="rgba(0, 242, 254, 0.25)" stroke-width="1" />
+        <circle cx="400" cy="400" r="372" fill="none" stroke="rgba(56, 189, 248, 0.4)" stroke-width="1.5" stroke-dasharray="4, 8" />
+        <!-- Cardinal HUD Reticle Brackets -->
+        <path d="M 375,20 L 400,16 L 425,20" fill="none" stroke="#00f2fe" stroke-width="2.5" />
+        <path d="M 375,780 L 400,784 L 425,780" fill="none" stroke="#00f2fe" stroke-width="2.5" />
+        <path d="M 20,375 L 16,400 L 20,425" fill="none" stroke="#00f2fe" stroke-width="2.5" />
+        <path d="M 780,375 L 784,400 L 780,425" fill="none" stroke="#00f2fe" stroke-width="2.5" />
+      </g>
+
+      <!-- RING 2: Primary Outer Ring & 10 Solenoid Coils (Rotates Clockwise) -->
+      <g class="arc-rotator-cw">
+        <!-- Heavy Titanium Outer Segment Track -->
+        <circle cx="400" cy="400" r="342" fill="none" stroke="rgba(10, 18, 38, 0.85)" stroke-width="44" />
+        <circle cx="400" cy="400" r="364" fill="none" stroke="rgba(0, 242, 254, 0.6)" stroke-width="2" />
+        <circle cx="400" cy="400" r="320" fill="none" stroke="rgba(0, 242, 254, 0.75)" stroke-width="2.5" />
+        
+        <!-- Cyan Energy Ring under coils -->
+        <circle cx="400" cy="400" r="342" fill="none" stroke="#00f2fe" stroke-width="6" opacity="0.45" filter="url(#arcCyanGlow)" />
+        <circle cx="400" cy="400" r="342" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="16, 6" opacity="0.9" />
+
+        <!-- 10 Solenoid Copper Induction Coils Spaced at 36 Degrees -->
+        <g transform="translate(400, 400)">
+          <use href="#arcCoilBlock" transform="rotate(0)" />
+          <use href="#arcCoilBlock" transform="rotate(36)" />
+          <use href="#arcCoilBlock" transform="rotate(72)" />
+          <use href="#arcCoilBlock" transform="rotate(108)" />
+          <use href="#arcCoilBlock" transform="rotate(144)" />
+          <use href="#arcCoilBlock" transform="rotate(180)" />
+          <use href="#arcCoilBlock" transform="rotate(216)" />
+          <use href="#arcCoilBlock" transform="rotate(252)" />
+          <use href="#arcCoilBlock" transform="rotate(288)" />
+          <use href="#arcCoilBlock" transform="rotate(324)" />
+        </g>
+      </g>
+
+      <!-- RING 3: Middle Technical Telemetry & Notched Gear Ring (Rotates Counter-Clockwise) -->
+      <g class="arc-rotator-ccw">
+        <!-- Cyber Cog Teeth -->
+        <circle cx="400" cy="400" r="280" fill="none" stroke="rgba(56, 189, 248, 0.35)" stroke-width="22" stroke-dasharray="6, 8" />
+        <circle cx="400" cy="400" r="292" fill="none" stroke="#00f2fe" stroke-width="1.8" />
+        <circle cx="400" cy="400" r="268" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="28, 10" />
+
+        <!-- Technical Stark / F.R.Y.D.A.Y Arc Ring Markings -->
+        <text font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="700" fill="rgba(0, 242, 254, 0.85)" letter-spacing="4">
+          <textPath href="#starkTextArc2" startOffset="0%">
+            STARK INDUSTRIES • F.R.Y.D.A.Y NEURAL SYSTEM • 3.2 GJ/SEC OUTPUT • MK-LXXXV
+          </textPath>
+        </text>
+
+        <text font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="600" fill="rgba(56, 189, 248, 0.75)" letter-spacing="5">
+          <textPath href="#starkTextArc" startOffset="50%">
+            PALLADIUM-VIBRANIUM ISOTOPE CORE • AUTONOMOUS RUNTIME ACTIVE
+          </textPath>
+        </text>
+
+        <!-- Inner Notched High-Precision Index Ticks -->
+        <circle cx="400" cy="400" r="228" fill="none" stroke="#00f2fe" stroke-width="8" stroke-dasharray="3, 16.9" opacity="0.85" />
+        <circle cx="400" cy="400" r="212" fill="none" stroke="rgba(0, 242, 254, 0.5)" stroke-width="1.5" />
+      </g>
+
+      <!-- RING 4: Inner Aperture Housing & Tri-Blade Titanium Struts (Rotates Slow Clockwise) -->
+      <g class="arc-rotator-inner-cw">
+        <circle cx="400" cy="400" r="188" fill="none" stroke="rgba(10, 18, 38, 0.95)" stroke-width="20" />
+        <circle cx="400" cy="400" r="198" fill="none" stroke="#00f2fe" stroke-width="2.2" />
+        <circle cx="400" cy="400" r="178" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4, 4" />
+        
+        <!-- Hexagonal Titanium Bracing -->
+        <g transform="translate(400, 400)">
+          <polygon points="0,-168 145.5,-84 145.5,84 0,168 -145.5,84 -145.5,-84" 
+                   fill="none" stroke="rgba(0, 242, 254, 0.45)" stroke-width="2" stroke-dasharray="14, 6" />
+          
+          <!-- 3 Heavy Stabilizer Struts at 120 Degrees -->
+          <rect x="-9" y="-180" width="18" height="54" rx="4" fill="#1e293b" stroke="#00f2fe" stroke-width="1.8" />
+          <rect x="-9" y="-180" width="18" height="54" rx="4" fill="#1e293b" stroke="#00f2fe" stroke-width="1.8" transform="rotate(120)" />
+          <rect x="-9" y="-180" width="18" height="54" rx="4" fill="#1e293b" stroke="#00f2fe" stroke-width="1.8" transform="rotate(240)" />
+        </g>
+      </g>
+
+      <!-- RING 5: Iconic Triangular Unibeam Energy Core (Mark VI / Avengers Heart) -->
+      <g class="arc-core-pulse">
+        <!-- High Intensity Cyan/White Plasma Sphere -->
+        <circle cx="400" cy="400" r="145" fill="url(#unibeamCore)" opacity="0.95" />
+        
+        <!-- Radiating Inner Triangular Energy Focus -->
+        <g transform="translate(400, 400)">
+          <!-- Outer Glowing Unibeam Triangle -->
+          <polygon points="0,-118 102.2,59 -102.2,59" 
+                   fill="none" stroke="#00f2fe" stroke-width="4.5" filter="url(#arcCyanGlow)" />
+          
+          <!-- Inner Inverted High-Energy Triangle -->
+          <polygon points="0,96 83.1,-48 -83.1,-48" 
+                   fill="rgba(0, 242, 254, 0.15)" stroke="#ffffff" stroke-width="3" filter="url(#arcCyanGlow)" />
+
+          <!-- Unibeam Power Conduit Lines -->
+          <line x1="0" y1="0" x2="0" y2="-118" stroke="#ffffff" stroke-width="3" filter="url(#arcCyanGlow)" />
+          <line x1="0" y1="0" x2="102.2" y2="59" stroke="#ffffff" stroke-width="3" filter="url(#arcCyanGlow)" />
+          <line x1="0" y1="0" x2="-102.2" y2="59" stroke="#ffffff" stroke-width="3" filter="url(#arcCyanGlow)" />
+
+          <!-- Central White-Hot Fusion Palladium Sphere -->
+          <circle cx="0" cy="0" r="50" fill="#ffffff" filter="url(#arcCoreGlow)" />
+          <circle cx="0" cy="0" r="34" fill="#e0f2fe" />
+          <circle cx="0" cy="0" r="18" fill="#ffffff" />
+        </g>
+      </g>
+    </svg>
+  </div>
 
   <div class="app-container">
     <!-- Top Navigation Bar -->
@@ -447,6 +630,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260918_v3"></script>
+  <script src="app.js?v=20260918_v4"></script>
 </body>
 </html>
