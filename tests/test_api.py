@@ -37,7 +37,7 @@ def test_api_run_custom_task():
 def test_ui_index_loads():
     resp = client.get("/")
     assert resp.status_code == 200
-    assert "TaskFlow AI" in resp.text
+    assert "F.R.Y.D.A.Y" in resp.text
     assert "Task Search (ChatGPT)" in resp.text
 
 def test_api_chat_endpoint():

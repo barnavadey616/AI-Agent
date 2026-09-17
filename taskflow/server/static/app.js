@@ -1,4 +1,4 @@
-// TaskFlow AI Frontend Client
+// F.R.Y.D.A.Y Frontend Client
 
 let socket = null;
 let currentChatAccordionBody = null;

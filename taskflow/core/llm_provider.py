@@ -204,10 +204,10 @@ class LLMProvider:
             pass
 
         # Intelligent response for general questions and greetings
-        if any(w in lower_prompt for w in ["who are you", "what is taskflow", "what can you do", "help", "hello", "hi"]):
+        if any(w in lower_prompt for w in ["who are you", "what is taskflow", "what is fryday", "what can you do", "help", "hello", "hi"]):
             return LLMResponse(
-                content="""### Welcome to TaskFlow AI!
-I am your **Autonomous Multi-Agent Automation Hub**. I can help you automate repetitive digital tasks:
+                content="""### Welcome to F.R.Y.D.A.Y!
+I am your **Autonomous Multi-Agent AI Platform**. I can help you automate repetitive digital tasks and investigate threats:
 - 📂 **Document & Inbox Organizer**: Automatically classify, standardize filenames, and sort receipts, invoices, and reports into folders.
 - 🌐 **Executive Research Briefs**: Ingest web URLs and generate structured industry intelligence summaries.
 - 📊 **Tabular Data Hygiene**: Scrub duplicate rows, impute missing values, and clamp negative outliers from CSV/Excel spreadsheets.
