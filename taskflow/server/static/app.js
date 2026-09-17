@@ -97,6 +97,7 @@ async function safeJsonFetch(pathOrUrl, options = {}) {
 document.addEventListener("DOMContentLoaded", () => {
   checkBackendEnvironment();
   initWebSocket();
+  initAuth();
   fetchStatus();
   loadArtifacts();
 
@@ -267,6 +268,82 @@ function resetBackendToLocal() {
   updateBackendIndicator(local ? "connected" : "disconnected");
   setTimeout(closeBackendModal, 1000);
   fetchStatus();
+}
+
+// ==========================================
+// User Authentication (Login / Logout Portal)
+// ==========================================
+const AUTH_USER_KEY = "friday_auth_user";
+
+function initAuth() {
+  const savedUser = localStorage.getItem(AUTH_USER_KEY);
+  if (savedUser) {
+    applyUserLoggedIn(savedUser);
+  } else {
+    applyUserLoggedOut();
+  }
+}
+
+function openLoginModal() {
+  const modal = document.getElementById("loginModal");
+  if (modal) {
+    modal.style.display = "flex";
+    const emailInput = document.getElementById("loginEmailInput");
+    if (emailInput) {
+      emailInput.focus();
+    }
+    const fb = document.getElementById("loginFeedback");
+    if (fb) fb.style.display = "none";
+  }
+}
+
+function closeLoginModal() {
+  const modal = document.getElementById("loginModal");
+  if (modal) modal.style.display = "none";
+}
+
+function handleLoginModalOverlayClick(e) {
+  if (e.target.id === "loginModal") {
+    closeLoginModal();
+  }
+}
+
+function handleLoginSubmit() {
+  const emailInput = document.getElementById("loginEmailInput");
+  const email = (emailInput ? emailInput.value : "").trim();
+  const name = email ? email.split("@")[0] : "Stark Agent";
+  handleDemoLogin(name);
+}
+
+function handleDemoLogin(username) {
+  localStorage.setItem(AUTH_USER_KEY, username);
+  applyUserLoggedIn(username);
+  closeLoginModal();
+  logToConsole("info", `User authenticated as ${username}`);
+}
+
+function handleLogout() {
+  localStorage.removeItem(AUTH_USER_KEY);
+  applyUserLoggedOut();
+  logToConsole("info", "User logged out");
+}
+
+function applyUserLoggedIn(username) {
+  const btnLogin = document.getElementById("btnLogin");
+  const chip = document.getElementById("userProfileChip");
+  const nameEl = document.getElementById("userProfileName");
+
+  if (btnLogin) btnLogin.style.display = "none";
+  if (chip) chip.style.display = "inline-flex";
+  if (nameEl) nameEl.textContent = username;
+}
+
+function applyUserLoggedOut() {
+  const btnLogin = document.getElementById("btnLogin");
+  const chip = document.getElementById("userProfileChip");
+
+  if (btnLogin) btnLogin.style.display = "inline-flex";
+  if (chip) chip.style.display = "none";
 }
 
 // ==========================================

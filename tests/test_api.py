@@ -38,7 +38,7 @@ def test_ui_index_loads():
     resp = client.get("/")
     assert resp.status_code == 200
     assert "F.R.Y.D.A.Y" in resp.text
-    assert "Task Search (ChatGPT)" in resp.text
+    assert "Login" in resp.text
 
 def test_api_chat_endpoint():
     resp = client.post("/api/chat", json={"query": "Research latest agentic breakthroughs", "target_agent": "auto"})

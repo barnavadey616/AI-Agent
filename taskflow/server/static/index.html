@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>F.R.Y.D.A.Y — Autonomous Multi-Agent Automation Hub</title>
-  <link rel="stylesheet" href="style.css?v=20260918_v5">
+  <link rel="stylesheet" href="style.css?v=20260918_v6">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -212,11 +212,16 @@
         </div>
       </div>
 
-      <!-- Active Neural Mode Indicator -->
-      <div class="view-tabs">
-        <div class="tab-btn active" id="tabChat" style="cursor: default;">
-          <span class="tab-icon">💬</span>
-          <span>Task Search (ChatGPT)</span>
+      <!-- Top Right Authentication / Login -->
+      <div class="nav-auth" id="navAuth">
+        <button class="btn-login" id="btnLogin" onclick="openLoginModal()" title="Sign in to F.R.Y.D.A.Y">
+          <span class="login-icon">👤</span>
+          <span class="login-text">Login</span>
+        </button>
+        <div class="user-profile-chip" id="userProfileChip" style="display: none;">
+          <div class="profile-avatar">⚡</div>
+          <span class="profile-name" id="userProfileName">Stark Agent</span>
+          <button class="btn-logout" onclick="handleLogout()" title="Log out">✕</button>
         </div>
       </div>
     </header>
@@ -560,6 +565,48 @@
 
   </div>
 
+  <!-- F.R.Y.D.A.Y Access Portal / Login Modal -->
+  <div class="modal-overlay" id="loginModal" style="display: none;" onclick="handleLoginModalOverlayClick(event)">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">🔐</span>
+          <div>
+            <h3>F.R.Y.D.A.Y Access Portal</h3>
+            <p class="modal-subtitle">Sign in to your Stark Intelligence workspace</p>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeLoginModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="loginEmailInput"><strong>Stark ID / Email:</strong></label>
+          <input 
+            type="email" 
+            id="loginEmailInput" 
+            placeholder="tony@starkindustries.com" 
+            autocomplete="email"
+            spellcheck="false"
+          >
+        </div>
+        <div class="form-group">
+          <label for="loginPasswordInput"><strong>Security Passcode:</strong></label>
+          <input 
+            type="password" 
+            id="loginPasswordInput" 
+            placeholder="••••••••••••" 
+            autocomplete="current-password"
+          >
+        </div>
+        <div class="test-feedback" id="loginFeedback" style="display: none;"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="handleDemoLogin('Guest Agent')">Guest Access</button>
+        <button class="btn btn-primary" id="btnSubmitLogin" onclick="handleLoginSubmit()">Sign In</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Backend API Configuration Modal -->
   <div class="modal-overlay" id="backendModal" style="display: none;" onclick="handleModalOverlayClick(event)">
     <div class="modal-card">
@@ -599,6 +646,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260918_v5"></script>
+  <script src="app.js?v=20260918_v6"></script>
 </body>
 </html>
