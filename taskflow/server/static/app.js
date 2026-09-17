@@ -352,7 +352,7 @@ async function submitChatTask() {
         const isReport = art.endsWith(".html") || art.endsWith(".md") || art.endsWith(".json");
         link.href = getApiUrl(`/api/artifacts/${encodeURIComponent(art)}?type=${isReport ? 'report' : 'data'}`);
         link.target = "_blank";
-        link.innerHTML = `?? Open ${escapeHtml(art)} ?`;
+        link.innerHTML = `📄 Open ${escapeHtml(art)} ↗`;
         linksContainer.appendChild(link);
       });
       assistantBubble.querySelector(".msg-content").appendChild(linksContainer);

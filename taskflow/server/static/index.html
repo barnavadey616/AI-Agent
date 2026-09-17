@@ -89,7 +89,7 @@
           <div class="chat-msg assistant">
             <div class="msg-avatar">⚡</div>
             <div class="msg-content">
-              <p>Hello! I am <strong>TaskFlow AI</strong>. Describe any repetitive digital workflow you want to automate, or select one of the suggested prompts below.</p>
+              <p>Hello! I am <strong>TaskFlow AI</strong>. Ask any question or describe any repetitive task you would like to automate.</p>
             </div>
           </div>
         </div>
@@ -135,8 +135,8 @@
             </div>
           </div>
 
-          <!-- Quick Suggestion Cards -->
-          <div class="suggestion-chips" id="suggestionChips">
+          <!-- Quick Suggestion Cards (Hidden per user request: Chatbox only) -->
+          <div class="suggestion-chips" id="suggestionChips" style="display: none;">
             <button class="chip" onclick="useSuggestion('Organize all unfiled receipts, bills, and contracts in demo_data/inbox')">
               <span class="chip-icon">📂</span>
               <div class="chip-text">

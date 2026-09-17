@@ -856,18 +856,9 @@ input:checked + .slider:before {
   transform: scale(0.95);
 }
 
-/* Suggestion Chips */
+/* Suggestion Chips (Hidden - chatbox only mode) */
 .suggestion-chips {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-top: 14px;
-}
-
-@media (max-width: 850px) {
-  .suggestion-chips {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  display: none !important;
 }
 
 .chip {
