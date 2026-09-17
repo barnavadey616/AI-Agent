@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>F.R.Y.D.A.Y — Autonomous Multi-Agent Automation Hub</title>
-  <link rel="stylesheet" href="style.css?v=20260918_v6">
+  <link rel="stylesheet" href="style.css?v=20260918_v7">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -201,14 +201,23 @@
   <div class="app-container">
     <!-- Top Navigation Bar -->
     <header class="navbar">
-      <div class="brand">
-        <div class="logo-icon arc-reactor" title="F.R.Y.D.A.Y Neural Core">
-          <div class="arc-ring"></div>
-          <span class="arc-symbol">⚡</span>
-        </div>
-        <div>
-          <h1>F.R.Y.D.A.Y</h1>
-          <span class="tagline">Next-Gen Autonomous AI Operations</span>
+      <div class="brand-group">
+        <button class="sidebar-toggle-btn" id="btnSidebarToggle" onclick="toggleSidebar()" title="Toggle Sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="brand">
+          <div class="logo-icon arc-reactor" title="F.R.Y.D.A.Y Neural Core">
+            <div class="arc-ring"></div>
+            <span class="arc-symbol">⚡</span>
+          </div>
+          <div>
+            <h1>F.R.Y.D.A.Y</h1>
+            <span class="tagline">Next-Gen Autonomous AI Operations</span>
+          </div>
         </div>
       </div>
 
@@ -226,8 +235,107 @@
       </div>
     </header>
 
-    <!-- VIEW 1: ChatGPT-Style Task Search & Conversation Space -->
-    <section class="view-section active" id="viewChat">
+    <!-- Main Layout: Left Sidebar + Viewport -->
+    <div class="app-layout-wrapper">
+      <!-- Dark backdrop for mobile drawer -->
+      <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
+
+      <!-- ChatGPT-Style Left Sidebar matching screenshot -->
+      <aside class="app-sidebar" id="appSidebar">
+        <!-- Top Navigation Actions matching screenshot -->
+        <div class="sidebar-top-nav">
+          <button class="sidebar-nav-item new-chat-btn" onclick="startNewChat()" title="Start a new chat">
+            <span class="sidebar-icon">
+              <!-- Compose icon -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            </span>
+            <span class="sidebar-label">New chat</span>
+          </button>
+
+          <button class="sidebar-nav-item" onclick="openSidebarModal('library')" title="Library">
+            <span class="sidebar-icon">
+              <!-- Books / Library icon matching screenshot -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+            </span>
+            <span class="sidebar-label">Library</span>
+          </button>
+
+          <button class="sidebar-nav-item" onclick="openSidebarModal('projects')" title="Projects">
+            <span class="sidebar-icon">
+              <!-- Folder / Projects icon matching screenshot -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </span>
+            <span class="sidebar-label">Projects</span>
+          </button>
+
+          <button class="sidebar-nav-item" onclick="openSidebarModal('scheduled')" title="Scheduled">
+            <span class="sidebar-icon">
+              <!-- Clock / Scheduled icon matching screenshot -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </span>
+            <span class="sidebar-label">Scheduled</span>
+          </button>
+
+          <button class="sidebar-nav-item" onclick="openSidebarModal('plugins')" title="Plugins">
+            <span class="sidebar-icon">
+              <!-- Target / Plugins icon matching screenshot -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+            </span>
+            <span class="sidebar-label">Plugins</span>
+          </button>
+
+          <button class="sidebar-nav-item" onclick="openSidebarModal('codex')" title="Codex">
+            <span class="sidebar-icon">
+              <!-- Codex / brain cloud icon matching screenshot -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+              </svg>
+            </span>
+            <span class="sidebar-label">Codex</span>
+          </button>
+
+          <button class="sidebar-nav-item" onclick="openSidebarModal('more')" title="More">
+            <span class="sidebar-icon">
+              <!-- Ellipsis icon matching screenshot -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="5" cy="12" r="2"></circle>
+                <circle cx="12" cy="12" r="2"></circle>
+                <circle cx="19" cy="12" r="2"></circle>
+              </svg>
+            </span>
+            <span class="sidebar-label">More</span>
+          </button>
+        </div>
+
+        <!-- Recents History Section matching screenshot -->
+        <div class="sidebar-recents-section">
+          <div class="recents-header">
+            <span>Recents</span>
+          </div>
+          <div class="recents-list" id="recentsList">
+            <!-- Dynamically populated from localStorage -->
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Viewport Area -->
+      <main class="main-viewport">
+        <!-- VIEW 1: ChatGPT-Style Task Search & Conversation Space -->
+        <section class="view-section active" id="viewChat">
       <div class="chatgpt-container">
         <!-- Backend Alert Banner (shown when frontend runs on Netlify without connected backend) -->
         <div class="backend-banner" id="backendBanner" style="display: none;">
@@ -562,7 +670,221 @@
         </div>
       </div>
     </section>
+      </main>
+    </div>
+  </div>
 
+  <!-- Sidebar Action Modals -->
+  <!-- 1. Library Modal -->
+  <div class="modal-overlay" id="sidebarLibraryModal" style="display: none;" onclick="handleSidebarModalOverlayClick(event, 'sidebarLibraryModal')">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">📚</span>
+          <div>
+            <h3>F.R.Y.D.A.Y Prompt & Workflow Library</h3>
+            <p class="modal-subtitle">Pre-configured agent intelligence templates</p>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeSidebarModal('sidebarLibraryModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="library-grid">
+          <div class="library-card" onclick="runScamDemo('upi_refund'); closeSidebarModal('sidebarLibraryModal');">
+            <span class="lib-icon">🛡️</span>
+            <h4>Fake ₹25,000 UPI PIN Fraud Trap</h4>
+            <p>Dissects fake payment gateway screenshots and fraudulent reverse-charge PIN requests.</p>
+          </div>
+          <div class="library-card" onclick="runScamDemo('telegram_job'); closeSidebarModal('sidebarLibraryModal');">
+            <span class="lib-icon">💼</span>
+            <h4>Telegram Video Rating Job Trap</h4>
+            <p>Identifies fake HR recruitment messages offering daily crypto returns.</p>
+          </div>
+          <div class="library-card" onclick="runScamDemo('electricity_cut'); closeSidebarModal('sidebarLibraryModal');">
+            <span class="lib-icon">⚡</span>
+            <h4>Urgent Power Disconnection SMS</h4>
+            <p>Checks fake utility billing extortion and malicious APK download traps.</p>
+          </div>
+          <div class="library-card" onclick="runScamDemo('fedex_customs'); closeSidebarModal('sidebarLibraryModal');">
+            <span class="lib-icon">📦</span>
+            <h4>FedEx Narcotics Digital Arrest Extortion</h4>
+            <p>Scans customs extortion claims and forged police clearance certificates.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Projects Modal -->
+  <div class="modal-overlay" id="sidebarProjectsModal" style="display: none;" onclick="handleSidebarModalOverlayClick(event, 'sidebarProjectsModal')">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">📁</span>
+          <div>
+            <h3>Active Agent Projects</h3>
+            <p class="modal-subtitle">Workspaces and automation suites running under F.R.Y.D.A.Y</p>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeSidebarModal('sidebarProjectsModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="project-list">
+          <div class="project-item active">
+            <span class="proj-badge">ACTIVE</span>
+            <h4>F.R.Y.D.A.Y Neural Hub (Current)</h4>
+            <p>Multi-agent orchestration and ChatGPT-style conversational automation.</p>
+          </div>
+          <div class="project-item">
+            <span class="proj-badge">ONLINE</span>
+            <h4>ScamShield Threat Intelligence</h4>
+            <p>Automated IOC extraction, phishing domain analysis, and security reporting.</p>
+          </div>
+          <div class="project-item">
+            <span class="proj-badge">ONLINE</span>
+            <h4>Autonomous Data Cleaner</h4>
+            <p>Pandas & NumPy automated outlier detection and clean dataset exports.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Scheduled Modal -->
+  <div class="modal-overlay" id="sidebarScheduledModal" style="display: none;" onclick="handleSidebarModalOverlayClick(event, 'sidebarScheduledModal')">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">⏱️</span>
+          <div>
+            <h3>Scheduled Automations & Background Watchers</h3>
+            <p class="modal-subtitle">Autonomous tasks running on cron cycles</p>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeSidebarModal('sidebarScheduledModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="scheduled-tasks">
+          <div class="sched-task-card">
+            <div class="sched-left">
+              <span class="sched-icon">🔄</span>
+              <div>
+                <strong>Continuous Threat Signature Sync</strong>
+                <p>Fetches emerging UPI, phishing, and malware signatures every 6 hours.</p>
+              </div>
+            </div>
+            <span class="sched-status green">Active</span>
+          </div>
+          <div class="sched-task-card">
+            <div class="sched-left">
+              <span class="sched-icon">📂</span>
+              <div>
+                <strong>Workspace Folder Auto-Watcher</strong>
+                <p>Monitors <code>input/</code> folder for new receipts, CSVs, or suspicious screenshots.</p>
+              </div>
+            </div>
+            <span class="sched-status green">Watching</span>
+          </div>
+          <div class="sched-task-card">
+            <div class="sched-left">
+              <span class="sched-icon">🧹</span>
+              <div>
+                <strong>Artifact & Report Housekeeping</strong>
+                <p>Prunes expired scratch files and archives reports daily at midnight.</p>
+              </div>
+            </div>
+            <span class="sched-status blue">Daily 00:00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Plugins Modal -->
+  <div class="modal-overlay" id="sidebarPluginsModal" style="display: none;" onclick="handleSidebarModalOverlayClick(event, 'sidebarPluginsModal')">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">🔄</span>
+          <div>
+            <h3>F.R.Y.D.A.Y Tool & Plugin Registry</h3>
+            <p class="modal-subtitle">Installed agent capability modules</p>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeSidebarModal('sidebarPluginsModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="plugin-grid">
+          <div class="plugin-badge-card">
+            <div class="p-header"><span class="p-name">ScamShield Engine</span><span class="p-tag active">Enabled</span></div>
+            <p>Regex IOC extraction, APK signature heuristics, and URL phishing analyzer.</p>
+          </div>
+          <div class="plugin-badge-card">
+            <div class="p-header"><span class="p-name">Google Gemini Flash</span><span class="p-tag active">Connected</span></div>
+            <p>High-speed reasoning model with tool-use for sub-second responses.</p>
+          </div>
+          <div class="plugin-badge-card">
+            <div class="p-header"><span class="p-name">DuckDuckGo Web Search</span><span class="p-tag active">Enabled</span></div>
+            <p>Live real-time web intelligence and research briefing retrieval.</p>
+          </div>
+          <div class="plugin-badge-card">
+            <div class="p-header"><span class="p-name">Multimodal Vision</span><span class="p-tag active">Enabled</span></div>
+            <p>Visual document OCR and screenshot threat analysis.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Codex Modal -->
+  <div class="modal-overlay" id="sidebarCodexModal" style="display: none;" onclick="handleSidebarModalOverlayClick(event, 'sidebarCodexModal')">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">☁️</span>
+          <div>
+            <h3>Codex Neural Memory</h3>
+            <p class="modal-subtitle">Indexed knowledge documents and operational guidelines</p>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeSidebarModal('sidebarCodexModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--text-secondary); margin-bottom: 12px; font-size: 0.9rem;">
+          Codex enables F.R.Y.D.A.Y to answer questions grounded in your private organization docs, policies, and API references.
+        </p>
+        <button class="btn btn-primary" onclick="closeSidebarModal('sidebarCodexModal'); switchView('knowledge');">Open Full Knowledge Base</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. More Options Modal -->
+  <div class="modal-overlay" id="sidebarMoreModal" style="display: none;" onclick="handleSidebarModalOverlayClick(event, 'sidebarMoreModal')">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">⋯</span>
+          <div>
+            <h3>More Options & System Diagnostics</h3>
+            <p class="modal-subtitle">F.R.Y.D.A.Y runtime configuration</p>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeSidebarModal('sidebarMoreModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button class="btn btn-ghost" style="justify-content: flex-start; text-align: left;" onclick="closeSidebarModal('sidebarMoreModal'); openBackendModal();">
+            ⚙️ Configure Render Backend API
+          </button>
+          <button class="btn btn-ghost" style="justify-content: flex-start; text-align: left;" onclick="exportChatHistory();">
+            📥 Export Chat History (JSON)
+          </button>
+          <button class="btn btn-ghost" style="justify-content: flex-start; text-align: left; color: var(--neon-red);" onclick="clearAllChatHistory();">
+            🗑️ Clear All Search History
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- F.R.Y.D.A.Y Access Portal / Login Modal -->
@@ -646,6 +968,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260918_v6"></script>
+  <script src="app.js?v=20260918_v7"></script>
 </body>
 </html>

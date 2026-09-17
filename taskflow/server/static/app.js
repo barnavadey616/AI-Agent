@@ -100,6 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initAuth();
   fetchStatus();
   loadArtifacts();
+  initChatHistory();
 
   // Watcher checkbox change
   const watcherCheckbox = document.getElementById("watcherCheckbox");
@@ -506,6 +507,14 @@ async function submitChatTask() {
     scrollChatToBottom();
     loadArtifacts();
 
+    // Persist turn to chat history
+    saveCurrentSessionTurn(
+      query || "Investigate attached evidence",
+      imageName,
+      data.reply || "Task processing completed.",
+      data.artifacts || []
+    );
+
   } catch (err) {
     answerContainer.innerHTML = `<span style="color: #ef4444; font-weight: 500;">⚠️ ${escapeHtml(err.message)}</span>`;
     currentChatAccordionBody = null;
@@ -560,6 +569,504 @@ function scrollChatToBottom() {
   const container = document.getElementById("chatMessages");
   if (container) {
     container.scrollTop = container.scrollHeight;
+  }
+}
+
+// ==========================================
+// ChatGPT Sidebar & Chat History Persistence
+// ==========================================
+
+const CHAT_SESSIONS_KEY = "friday_chat_sessions";
+const CURRENT_SESSION_ID_KEY = "friday_current_session_id";
+
+// Seed sessions matching user screenshot (media_1789675894571.png)
+const SEED_SESSIONS = [
+  {
+    id: "session_gemini_setup",
+    title: "Continue Gemini Setup",
+    timestamp: 1726618800000,
+    messages: [
+      {
+        role: "user",
+        text: "How do I configure my Gemini API key and test the model connection?",
+        attachmentName: null
+      },
+      {
+        role: "assistant",
+        text: "To configure Gemini with F.R.Y.D.A.Y:\n1. Obtain your API key from Google AI Studio.\n2. Set the `GEMINI_API_KEY` environment variable in your `.env` or Render environment settings.\n3. The system will automatically detect and initialize the `gemini-2.5-flash` model for ultra-low latency inference and multi-agent reasoning.\n\nAll tools and ScamShield analyzers are connected.",
+        artifacts: []
+      }
+    ]
+  },
+  {
+    id: "session_agent_vs_chatgpt",
+    title: "Agent Vs ChatGPT Gemini",
+    timestamp: 1726615200000,
+    messages: [
+      {
+        role: "user",
+        text: "What is the key architectural difference between autonomous agents and ChatGPT/Gemini chat models?",
+        attachmentName: null
+      },
+      {
+        role: "assistant",
+        text: "Standard LLMs operate in a single-turn or conversational prompt-response loop.\n\n**Autonomous Agents** (like F.R.Y.D.A.Y), on the other hand, execute a ReAct (Reasoning + Acting) loop with:\n- Tool calling & external execution\n- Multi-step planning and decomposition\n- Persistent memory & scratchpad state\n- Background asynchronous dispatch\n\nThis allows F.R.Y.D.A.Y to proactively analyze files, run tests, and monitor security events.",
+        artifacts: []
+      }
+    ]
+  },
+  {
+    id: "session_zero_credit",
+    title: "Attend Zero Credit Subjects",
+    timestamp: 1726611600000,
+    messages: [
+      {
+        role: "user",
+        text: "Should I attend zero credit subjects in my university curriculum?",
+        attachmentName: null
+      },
+      {
+        role: "assistant",
+        text: "Yes, attending zero-credit courses is often mandatory for degree completion or accreditation requirements (e.g., environmental studies, induction modules, ethics). Additionally, they often cover practical industry skills or foundational requirements.",
+        artifacts: []
+      }
+    ]
+  },
+  {
+    id: "session_render_deploy",
+    title: "Deploy Backend On Render",
+    timestamp: 1726608000000,
+    messages: [
+      {
+        role: "user",
+        text: "How do I deploy this FastAPI backend to Render?",
+        attachmentName: null
+      },
+      {
+        role: "assistant",
+        text: "The backend is configured with `render.yaml` and `uvicorn taskflow.server.app:app --host 0.0.0.0 --port $PORT`.\n\nKey steps:\n1. Connect your GitHub repository `barnavadey616/AI-Agent`.\n2. Render detects `render.yaml` and deploys the web service.\n3. Verify health via `https://ai-agent-pr00.onrender.com/api/status`.",
+        artifacts: []
+      }
+    ]
+  },
+  {
+    id: "session_victus_wobble",
+    title: "Fix HP Victus Wobble",
+    timestamp: 1726604400000,
+    messages: [
+      {
+        role: "user",
+        text: "How do I reduce screen wobble on an HP Victus laptop?",
+        attachmentName: null
+      },
+      {
+        role: "assistant",
+        text: "To minimize screen wobble:\n1. Place the laptop on a rigid, stable desk surface rather than your lap.\n2. Use a laptop stand with rubberized grips.\n3. Adjust the display angle to between 100-110 degrees to balance the hinge tension.\n4. Avoid typing aggressively on mechanical keys placed directly on the chassis.",
+        artifacts: []
+      }
+    ]
+  },
+  {
+    id: "session_deploy_netlify",
+    title: "Deploy file to Netlify",
+    timestamp: 1726600800000,
+    messages: [
+      {
+        role: "user",
+        text: "How do I deploy static files to Netlify?",
+        attachmentName: null
+      },
+      {
+        role: "assistant",
+        text: "You can drag and drop your static distribution folder directly into Netlify Drop, or connect your Git repo and configure publish directory as `taskflow/server/static` with redirect rules configured in `_redirects`.",
+        artifacts: []
+      }
+    ]
+  },
+  {
+    id: "session_tower_hanoi",
+    title: "Tower Of Hanoi Recursion",
+    timestamp: 1726597200000,
+    messages: [
+      {
+        role: "user",
+        text: "Explain Tower of Hanoi in recursion with time complexity.",
+        attachmentName: null
+      },
+      {
+        role: "assistant",
+        text: "The Tower of Hanoi solves moving n disks from source A to destination C via auxiliary B using recursive recurrence:\n- Move n-1 disks from A to B\n- Move the nth disk from A to C\n- Move n-1 disks from B to C\n\nTotal moves required: 2^n - 1, giving time complexity of **O(2^n)**.",
+        artifacts: []
+      }
+    ]
+  },
+  {
+    id: "session_quota_problem",
+    title: "Quota problem solution",
+    timestamp: 1726593600000,
+    messages: [
+      {
+        role: "user",
+        text: "What to do when hitting API rate limits or quota exhausted errors?",
+        attachmentName: null
+      },
+      {
+        role: "assistant",
+        text: "For quota/rate-limiting errors (HTTP 429):\n1. Implement exponential backoff with jitter.\n2. Use client-side response caching or RAG embedding cache.\n3. Batch similar requests.\n4. Switch to a fallback model (e.g. flash tier or secondary project key).",
+        artifacts: []
+      }
+    ]
+  },
+  {
+    id: "session_hackathon_problems",
+    title: "Hackathon Problem Statements",
+    timestamp: 1726590000000,
+    messages: [
+      {
+        role: "user",
+        text: "Give me some winning AI hackathon problem statements for cybersecurity and consumer safety.",
+        attachmentName: null
+      },
+      {
+        role: "assistant",
+        text: "Top winning themes:\n1. **ScamShield**: Real-time multimodal detection of digital arrest, fake UPI payment QR traps, and APK impersonation scams.\n2. **Autonomous Red-Teaming**: Self-directed agent probing API endpoints for authorization flaws.\n3. **Decentralized Threat Intelligence**: Privacy-preserving federated fraud intelligence sharing.",
+        artifacts: []
+      }
+    ]
+  }
+];
+
+function getStoredSessions() {
+  const raw = localStorage.getItem(CHAT_SESSIONS_KEY);
+  if (!raw) {
+    localStorage.setItem(CHAT_SESSIONS_KEY, JSON.stringify(SEED_SESSIONS));
+    return [...SEED_SESSIONS];
+  }
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      return parsed;
+    }
+  } catch (e) {
+    console.error("Error parsing stored sessions", e);
+  }
+  localStorage.setItem(CHAT_SESSIONS_KEY, JSON.stringify(SEED_SESSIONS));
+  return [...SEED_SESSIONS];
+}
+
+function saveStoredSessions(sessions) {
+  try {
+    localStorage.setItem(CHAT_SESSIONS_KEY, JSON.stringify(sessions));
+  } catch (e) {
+    console.error("Error saving chat sessions", e);
+  }
+}
+
+function getCurrentSessionId() {
+  return localStorage.getItem(CURRENT_SESSION_ID_KEY) || null;
+}
+
+function setCurrentSessionId(id) {
+  if (id) {
+    localStorage.setItem(CURRENT_SESSION_ID_KEY, id);
+  } else {
+    localStorage.removeItem(CURRENT_SESSION_ID_KEY);
+  }
+}
+
+function initChatHistory() {
+  const sessions = getStoredSessions();
+  let currentId = getCurrentSessionId();
+
+  // If no current session or invalid, default to the first session (or Continue Gemini Setup)
+  if (!currentId || !sessions.find(s => s.id === currentId)) {
+    const defaultSession = sessions.find(s => s.id === "session_gemini_setup") || sessions[0];
+    if (defaultSession) {
+      currentId = defaultSession.id;
+      setCurrentSessionId(currentId);
+    }
+  }
+
+  // Attach recents list click delegation
+  const recentsList = document.getElementById("recentsList");
+  if (recentsList) {
+    recentsList.removeEventListener("click", handleRecentsListClick);
+    recentsList.addEventListener("click", handleRecentsListClick);
+  }
+
+  renderRecentsList();
+
+  if (currentId) {
+    loadChatSession(currentId);
+  }
+}
+
+function renderRecentsList() {
+  const container = document.getElementById("recentsList");
+  if (!container) return;
+  const sessions = getStoredSessions();
+  const currentId = getCurrentSessionId();
+
+  if (sessions.length === 0) {
+    container.innerHTML = `<div style="padding: 12px 14px; font-size: 0.8rem; color: var(--text-muted);">No search history yet</div>`;
+    return;
+  }
+
+  container.innerHTML = sessions.map(session => {
+    const isActive = session.id === currentId ? "active" : "";
+    return `
+      <div class="recent-chat-item ${isActive}" data-session-id="${escapeHtml(session.id)}">
+        <div class="recent-title-group">
+          <span class="recent-dot"></span>
+          <span class="recent-title" title="${escapeHtml(session.title)}">${escapeHtml(session.title)}</span>
+        </div>
+        <button class="recent-delete-btn" data-delete-id="${escapeHtml(session.id)}" title="Delete chat">✕</button>
+      </div>
+    `;
+  }).join("");
+}
+
+function handleRecentsListClick(e) {
+  const deleteBtn = e.target.closest("[data-delete-id]");
+  if (deleteBtn) {
+    e.stopPropagation();
+    const id = deleteBtn.getAttribute("data-delete-id");
+    deleteChatSession(id);
+    return;
+  }
+
+  const item = e.target.closest("[data-session-id]");
+  if (item) {
+    const id = item.getAttribute("data-session-id");
+    loadChatSession(id);
+  }
+}
+
+function startNewChat() {
+  setCurrentSessionId(null);
+  
+  // Clear messages
+  const container = document.getElementById("chatMessages");
+  if (container) container.innerHTML = "";
+
+  // Show hero
+  const hero = document.getElementById("chatHero");
+  if (hero) hero.classList.remove("hidden");
+
+  // Focus input
+  const input = document.getElementById("chatInputText");
+  if (input) {
+    input.value = "";
+    input.focus();
+  }
+
+  removeChatAttachment();
+  pendingScamSampleId = null;
+
+  renderRecentsList();
+  closeSidebar();
+}
+
+function loadChatSession(sessionId) {
+  const sessions = getStoredSessions();
+  const session = sessions.find(s => s.id === sessionId);
+  if (!session) return;
+
+  setCurrentSessionId(sessionId);
+
+  // Hide hero
+  const hero = document.getElementById("chatHero");
+  if (hero) hero.classList.add("hidden");
+
+  // Clear messages container
+  const container = document.getElementById("chatMessages");
+  if (!container) return;
+  container.innerHTML = "";
+
+  // Render each message from history
+  if (session.messages && session.messages.length > 0) {
+    session.messages.forEach(msg => {
+      if (msg.role === "user") {
+        appendUserChatMessage(msg.text, msg.attachmentName);
+      } else if (msg.role === "assistant") {
+        renderStoredAssistantMessage(msg.text, msg.artifacts);
+      }
+    });
+  }
+
+  scrollChatToBottom();
+  renderRecentsList();
+  closeSidebar();
+}
+
+function renderStoredAssistantMessage(text, artifacts = []) {
+  const container = document.getElementById("chatMessages");
+  if (!container) return;
+
+  const msgDiv = document.createElement("div");
+  msgDiv.className = "chat-msg assistant";
+  msgDiv.innerHTML = `
+    <div class="msg-avatar">⚡</div>
+    <div class="msg-content">
+      <div class="msg-text">${formatMarkdown(text || "")}</div>
+    </div>
+  `;
+
+  if (artifacts && artifacts.length > 0) {
+    const linksContainer = document.createElement("div");
+    linksContainer.className = "chat-artifacts-links";
+    artifacts.forEach(art => {
+      if (!art) return;
+      const link = document.createElement("a");
+      link.className = "artifact-pill-btn";
+      const isReport = art.endsWith(".html") || art.endsWith(".md") || art.endsWith(".json");
+      link.href = getApiUrl(`/api/artifacts/${encodeURIComponent(art)}?type=${isReport ? 'report' : 'data'}`);
+      link.target = "_blank";
+      link.innerHTML = `📄 Open ${escapeHtml(art)} ↗`;
+      linksContainer.appendChild(link);
+    });
+    msgDiv.querySelector(".msg-content").appendChild(linksContainer);
+  }
+
+  container.appendChild(msgDiv);
+}
+
+function saveCurrentSessionTurn(userText, attachmentName, replyText, artifacts) {
+  const sessions = getStoredSessions();
+  let currentId = getCurrentSessionId();
+  let session = currentId ? sessions.find(s => s.id === currentId) : null;
+
+  if (!session) {
+    // Generate new session with title derived from user query
+    currentId = "session_" + Date.now();
+    let title = (userText || "New conversation").trim().replace(/\s+/g, " ");
+    if (title.length > 32) {
+      title = title.substring(0, 32) + "…";
+    }
+    session = {
+      id: currentId,
+      title: title,
+      timestamp: Date.now(),
+      messages: []
+    };
+    sessions.unshift(session);
+    setCurrentSessionId(currentId);
+  } else {
+    // Move session to top of list and update timestamp
+    session.timestamp = Date.now();
+    const idx = sessions.findIndex(s => s.id === currentId);
+    if (idx > 0) {
+      sessions.splice(idx, 1);
+      sessions.unshift(session);
+    }
+  }
+
+  session.messages.push({
+    role: "user",
+    text: userText,
+    attachmentName: attachmentName || null
+  });
+
+  session.messages.push({
+    role: "assistant",
+    text: replyText,
+    artifacts: artifacts || []
+  });
+
+  saveStoredSessions(sessions);
+  renderRecentsList();
+}
+
+function deleteChatSession(sessionId, event) {
+  if (event) event.stopPropagation();
+  let sessions = getStoredSessions();
+  sessions = sessions.filter(s => s.id !== sessionId);
+  saveStoredSessions(sessions);
+
+  const currentId = getCurrentSessionId();
+  if (currentId === sessionId) {
+    startNewChat();
+  } else {
+    renderRecentsList();
+  }
+}
+
+function exportChatHistory() {
+  const sessions = getStoredSessions();
+  const blob = new Blob([JSON.stringify(sessions, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `friday_chat_history_${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function clearAllChatHistory() {
+  if (confirm("Are you sure you want to clear all chat history and saved searches?")) {
+    localStorage.removeItem(CHAT_SESSIONS_KEY);
+    startNewChat();
+  }
+}
+
+// ==========================================
+// Sidebar Drawer & Modal Handlers
+// ==========================================
+
+function toggleSidebar() {
+  const sidebar = document.getElementById("appSidebar");
+  const backdrop = document.getElementById("sidebarBackdrop");
+  if (!sidebar) return;
+
+  if (window.innerWidth <= 900) {
+    // Mobile / tablet drawer mode
+    const isOpen = sidebar.classList.contains("open");
+    if (isOpen) {
+      closeSidebar();
+    } else {
+      sidebar.classList.add("open");
+      if (backdrop) backdrop.classList.add("active");
+    }
+  } else {
+    // Desktop collapsible mode
+    document.body.classList.toggle("sidebar-collapsed");
+  }
+}
+
+function closeSidebar() {
+  const sidebar = document.getElementById("appSidebar");
+  const backdrop = document.getElementById("sidebarBackdrop");
+  if (sidebar) sidebar.classList.remove("open");
+  if (backdrop) backdrop.classList.remove("active");
+}
+
+function getSidebarModalEl(typeOrId) {
+  if (!typeOrId) return null;
+  if (document.getElementById(typeOrId)) return document.getElementById(typeOrId);
+  const mapped = "sidebar" + typeOrId.charAt(0).toUpperCase() + typeOrId.slice(1) + "Modal";
+  return document.getElementById(mapped);
+}
+
+function openSidebarModal(typeOrId) {
+  const modal = getSidebarModalEl(typeOrId);
+  if (modal) {
+    modal.style.display = "flex";
+  }
+}
+
+function closeSidebarModal(typeOrId) {
+  const modal = getSidebarModalEl(typeOrId);
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
+
+function handleSidebarModalOverlayClick(e, typeOrId) {
+  const modal = getSidebarModalEl(typeOrId);
+  if (modal && e.target === modal) {
+    closeSidebarModal(typeOrId);
   }
 }
 
