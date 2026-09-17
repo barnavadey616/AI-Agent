@@ -292,6 +292,9 @@ input:checked + .slider:before {
 .btn-amber { background: var(--accent-amber); }
 .btn-amber:hover { background: #d97706; }
 
+.btn-red { background: #dc2626; }
+.btn-red:hover { background: #b91c1c; }
+
 .btn-sm {
   padding: 5px 10px;
   background: rgba(255, 255, 255, 0.08);
@@ -821,12 +824,83 @@ input:checked + .slider:before {
   outline: none;
 }
 
+/* Attachment Preview */
+.attachment-preview {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  padding: 4px 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+  color: #93c5fd;
+  animation: fadeIn 0.2s ease;
+}
+
+.preview-name {
+  font-weight: 600;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-remove {
+  background: transparent;
+  border: none;
+  color: #f87171;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.preview-remove:hover {
+  color: #ef4444;
+}
+
 .input-footer-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 8px;
   padding-top: 6px;
+}
+
+.input-action-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.attach-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.attach-btn:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: var(--accent-blue);
+  color: #93c5fd;
+}
+
+.attach-icon {
+  font-size: 0.9rem;
 }
 
 .capability-tags {
@@ -861,6 +935,49 @@ input:checked + .slider:before {
 .send-btn:hover {
   background: #2563eb;
   transform: scale(1.05);
+}
+
+/* ScamShield Demo Bar */
+.scam-demo-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+  padding: 2px 0;
+}
+
+.demo-bar-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.demo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  color: var(--text-primary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  backdrop-filter: blur(8px);
+}
+
+.demo-chip:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
 }
 
 .send-btn:active {
@@ -1647,6 +1764,27 @@ input:checked + .slider:before {
     height: 36px;
     min-width: 36px;
     margin-left: auto;
+  }
+
+  .attach-btn {
+    padding: 4px 8px;
+    font-size: 0.72rem;
+  }
+
+  .scam-demo-bar {
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .demo-bar-label {
+    font-size: 0.7rem;
+    width: 100%;
+    margin-bottom: 2px;
+  }
+
+  .demo-chip {
+    padding: 4px 9px;
+    font-size: 0.72rem;
   }
 
   /* Backend Banner on Mobile */

@@ -6,10 +6,12 @@ from taskflow.agents.file_organizer import FileOrganizerAgent
 from taskflow.agents.research_agent import ResearchAgent
 from taskflow.agents.data_cleaner import DataCleanerAgent
 from taskflow.agents.email_triage import EmailTriageAgent
+from taskflow.agents.scam_shield import ScamShieldAgent
 
 __all__ = [
     "FileOrganizerAgent",
     "ResearchAgent",
     "DataCleanerAgent",
-    "EmailTriageAgent"
+    "EmailTriageAgent",
+    "ScamShieldAgent"
 ]

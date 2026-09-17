@@ -48,22 +48,23 @@ class LLMProvider:
         prompt: str,
         system_instruction: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
-        history: Optional[List[Dict[str, Any]]] = None
+        history: Optional[List[Dict[str, Any]]] = None,
+        images: Optional[List[Dict[str, Any]]] = None
     ) -> LLMResponse:
         """Generate a response using Gemini 3.8 Flash or the intelligent heuristic engine."""
         if self.is_live and self.client:
             try:
                 return self._generate_gemini(
-                    prompt, system_instruction, tools, history
+                    prompt, system_instruction, tools, history, images
                 )
             except Exception as e:
                 logger.warning(f"Live Gemini call failed ({e}). Falling back to intelligent heuristic engine.")
                 return self._generate_simulation(
-                    prompt, system_instruction, tools, history
+                    prompt, system_instruction, tools, history, images
                 )
         else:
             return self._generate_simulation(
-                prompt, system_instruction, tools, history
+                prompt, system_instruction, tools, history, images
             )
 
     def _generate_gemini(
@@ -71,7 +72,8 @@ class LLMProvider:
         prompt: str,
         system_instruction: Optional[str],
         tools: Optional[List[Dict[str, Any]]],
-        history: Optional[List[Dict[str, Any]]]
+        history: Optional[List[Dict[str, Any]]],
+        images: Optional[List[Dict[str, Any]]] = None
     ) -> LLMResponse:
         """Calls Google GenAI with model fallback across active Gemini models."""
         candidate_models = [self.model]
@@ -88,9 +90,19 @@ class LLMProvider:
                 if system_instruction:
                     config_params["system_instruction"] = system_instruction
 
+                # Prepare contents (multimodal parts if images supplied)
+                contents = []
+                if images:
+                    for img in images:
+                        img_bytes = img.get("data")
+                        m_type = img.get("mime_type", "image/png")
+                        if img_bytes:
+                            contents.append(types.Part.from_bytes(data=img_bytes, mime_type=m_type))
+                contents.append(prompt)
+
                 response = self.client.models.generate_content(
                     model=model_name,
-                    contents=prompt,
+                    contents=contents if len(contents) > 1 else prompt,
                     config=types.GenerateContentConfig(**config_params) if config_params else None
                 )
 
@@ -144,7 +156,8 @@ class LLMProvider:
         prompt: str,
         system_instruction: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
-        history: Optional[List[Dict[str, Any]]] = None
+        history: Optional[List[Dict[str, Any]]] = None,
+        images: Optional[List[Dict[str, Any]]] = None
     ) -> LLMResponse:
         """
         High-fidelity heuristic simulation engine that generates realistic
@@ -154,7 +167,9 @@ class LLMProvider:
         sys = (system_instruction or "").lower()
 
         # Dispatch based primarily on agent persona system instruction
-        if "research" in sys or "intelligence" in sys:
+        if "scam" in sys or "fraud" in sys or "investigat" in sys:
+            return self._simulate_scam_shield(prompt)
+        elif "research" in sys or "intelligence" in sys:
             return self._simulate_research_agent(prompt)
         elif "cleaning" in sys or "hygiene" in sys or "quality auditor" in sys:
             return self._simulate_data_cleaner(prompt)
@@ -164,7 +179,9 @@ class LLMProvider:
             return self._simulate_email_triage(prompt)
 
         # Fallback to prompt keyword detection for automated batch commands
-        if any(k in lower_prompt for k in ["research brief", "market intelligence", "synthesize trends"]):
+        if any(k in lower_prompt for k in ["scam", "fake upi", "upi refund", "telegram job", "electricity disconnected", "customs arrest", "phishing"]):
+            return self._simulate_scam_shield(prompt)
+        elif any(k in lower_prompt for k in ["research brief", "market intelligence", "synthesize trends"]):
             return self._simulate_research_agent(prompt)
         elif any(k in lower_prompt for k in ["clean dataset", "scrub csv", "clean dirty csv"]):
             return self._simulate_data_cleaner(prompt)
@@ -306,6 +323,60 @@ Incoming inquiries have been triaged by urgency, category, and sentiment.
 - **Low Priority**: 8 generic newsletters (archived).
 
 All response drafts have been prepared with appropriate professional tone and reference IDs.
+""",
+            tool_calls=[]
+        )
+
+    def _simulate_scam_shield(self, prompt: str) -> LLMResponse:
+        p_lower = prompt.lower()
+        if "upi" in p_lower or "pin" in p_lower or "refund" in p_lower:
+            name = "Fake UPI Refund & Cashback Scam"
+            score = 96
+            rule = "You NEVER enter a UPI PIN to receive money or cashback. Entering a PIN always transfers funds out of your account."
+            red_flags = "• Request asks to enter UPI PIN to receive funds.\n• Collect request disguised as cashback.\n• Fake merchant VPA handle."
+        elif "job" in p_lower or "youtube" in p_lower or "telegram" in p_lower:
+            name = "Telegram & WhatsApp Part-Time Rating Job Scam"
+            score = 88
+            rule = "Legitimate companies do not hire via random WhatsApp/Telegram texts or demand prepaid task deposits."
+            red_flags = "• Unrealistic daily pay promises (₹2,000–₹8,000/day).\n• Unsolicited HR contact.\n• Escalates into prepaid 'merchant evaluation' tasks."
+        elif "electricity" in p_lower or "power" in p_lower or "bill" in p_lower:
+            name = "Urgent Electricity Disconnection Extortion"
+            score = 92
+            rule = "Power utilities do not send disconnection warnings from personal 10-digit mobile numbers with immediate deadlines."
+            red_flags = "• Short deadline intimidation ('tonight at 9:30 PM').\n• Directs victim to a personal mobile number.\n• Urges remote desktop app installation (AnyDesk)."
+        elif "fedex" in p_lower or "courier" in p_lower or "customs" in p_lower or "cbi" in p_lower:
+            name = "Courier Narcotics & Digital Arrest Scam"
+            score = 98
+            rule = "Police and customs NEVER conduct video call interrogations or demand fund transfers to clear your name."
+            red_flags = "• Threatens digital arrest or CBI warrant over an unverified parcel.\n• Asks for money to 'verify funds' or avoid detention.\n• High-pressure emotional intimidation."
+        else:
+            name = "Suspicious Cyber Threat & Social Engineering"
+            score = 84
+            rule = "Never share OTPs, click unverified shortened links, or download APK files."
+            red_flags = "• Urgency cues and unverified sender identity.\n• Potential phishing links or data harvesting."
+
+        return LLMResponse(
+            content=f"""### 🛡️ ScamShield AI — Forensic Threat Assessment
+
+**Threat Detected:** **{name}**  
+**Calculated Risk Index:** `🔴 {score}/100 (CRITICAL RISK)`
+
+---
+
+#### ⚠️ Key Red Flags Detected:
+{red_flags}
+
+---
+
+#### 💡 Golden Rule of Protection:
+> **{rule}**
+
+---
+
+#### 🚨 Immediate Safety Steps:
+1. **Do NOT Engage**: Do not click links, do not share OTPs, and never enter your UPI PIN.
+2. **Block & Report**: Block the sender on WhatsApp/Truecaller and report as spam.
+3. **Official Helpline**: Report financial fraud immediately to the **National Cyber Crime Reporting Helpline: 1930** or visit `cybercrime.gov.in`.
 """,
             tool_calls=[]
         )

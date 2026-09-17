@@ -103,6 +103,7 @@
                 <span class="selector-label">Target Agent:</span>
                 <select id="chatTargetAgent">
                   <option value="auto" selected>✨ Auto-Detect Agent</option>
+                  <option value="scamshield">🛡️ ScamShield — Fraud & Scam Investigator</option>
                   <option value="organizer">📂 Document & Inbox Organizer</option>
                   <option value="research">🌐 Research Briefing Agent</option>
                   <option value="cleaner">📊 Data Cleaner & Insights</option>
@@ -112,19 +113,33 @@
               <div class="model-badge" id="chatModelBadge">Gemini Flash • ReAct Tools</div>
             </div>
 
+            <!-- Image / File Attachment Preview Chip -->
+            <div class="attachment-preview" id="chatAttachmentPreview" style="display: none;">
+              <span class="preview-icon">🖼️</span>
+              <span class="preview-name" id="chatAttachmentName">screenshot.png</span>
+              <button type="button" class="preview-remove" onclick="removeChatAttachment()" title="Remove attachment">✕</button>
+            </div>
+
             <!-- Textarea -->
             <textarea 
               id="chatInputText" 
               rows="2" 
-              placeholder="Ask TaskFlow to automate a task... (e.g. 'Organize messy files in inbox', 'Research AI agent production benchmarks 2026', 'Clean dirty sales CSV')"></textarea>
+              placeholder="Ask TaskFlow to automate tasks, or investigate suspicious SMS, UPI requests, or links..."></textarea>
 
             <!-- Bottom Actions -->
             <div class="input-footer-bar">
-              <div class="capability-tags">
-                <span class="cap-tag">📁 FileSystem</span>
-                <span class="cap-tag">🌐 Web & Research</span>
-                <span class="cap-tag">📊 Pandas Data</span>
-                <span class="cap-tag">✉️ Communications</span>
+              <div class="input-action-tools">
+                <input type="file" id="scamFileInput" accept="image/*,.txt,.pdf" style="display: none;" onchange="handleScamFileSelected(event)">
+                <button type="button" class="attach-btn" onclick="document.getElementById('scamFileInput').click()" title="Upload scam screenshot, QR code, or message file">
+                  <span class="attach-icon">📎</span>
+                  <span class="attach-label">Upload Screenshot</span>
+                </button>
+                <div class="capability-tags">
+                  <span class="cap-tag">🛡️ Threat Intel</span>
+                  <span class="cap-tag">🔍 Vision OCR</span>
+                  <span class="cap-tag">🌐 URL Forensics</span>
+                  <span class="cap-tag">📱 Fake UPI / Phish</span>
+                </div>
               </div>
               <button class="send-btn" id="chatSendBtn" onclick="submitChatTask()" title="Send task (Enter)">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -133,6 +148,23 @@
                 </svg>
               </button>
             </div>
+          </div>
+
+          <!-- ScamShield 1-Click Wow Demo Bar -->
+          <div class="scam-demo-bar" id="scamDemoBar">
+            <span class="demo-bar-label">⚡ Live Scam Demos:</span>
+            <button type="button" class="demo-chip" onclick="runScamDemo('upi_refund')" title="Investigate Fake ₹25,000 UPI PIN Cashback Trap">
+              <span>📱 Fake UPI Refund</span>
+            </button>
+            <button type="button" class="demo-chip" onclick="runScamDemo('telegram_job')" title="Investigate Telegram YouTube Rating Job Scam">
+              <span>💼 Telegram Job Scam</span>
+            </button>
+            <button type="button" class="demo-chip" onclick="runScamDemo('electricity_cut')" title="Investigate Urgent Power Cutoff Extortion SMS">
+              <span>⚡ Electricity Cut SMS</span>
+            </button>
+            <button type="button" class="demo-chip" onclick="runScamDemo('fedex_customs')" title="Investigate FedEx Narcotics Digital Arrest Extortion">
+              <span>📦 FedEx Customs Phish</span>
+            </button>
           </div>
 
           <!-- Quick Suggestion Cards (Hidden per user request: Chatbox only) -->
@@ -227,6 +259,31 @@
                 <h3>Email & Ticket Triage Matrix</h3>
                 <p>Classifies incoming inquiries by urgency, intent, and sentiment. Prepares customized response drafts and builds an actionable escalation log.</p>
                 <button class="btn btn-amber" onclick="triggerEmailTriage()">Triage Sample Inquiries</button>
+              </div>
+            </div>
+
+            <!-- Card 5: ScamShield Cyber Threat Investigator -->
+            <div class="agent-card" id="cardScamShield" style="grid-column: 1 / -1;">
+              <div class="card-icon" style="background: rgba(239, 68, 68, 0.15); color: #f87171;">🛡️</div>
+              <div class="card-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+                  <h3 style="margin: 0;">ScamShield — Cyber Threat & Fraud Investigator</h3>
+                  <span style="font-size: 0.72rem; padding: 3px 8px; border-radius: 999px; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; font-weight: 700;">Vision OCR • Forensic Audit</span>
+                </div>
+                <p>Ingests suspicious screenshots, WhatsApp messages, fake UPI collect requests, and phishing links. Extracts IOCs, checks known scam databases, calculates threat risk, and produces safety countermeasures.</p>
+                <div class="card-inputs" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
+                  <select id="hubScamSampleSelect" style="flex: 1; min-width: 220px; padding: 10px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.82rem;">
+                    <option value="upi_refund">📱 Fake UPI Refund & Cashback Scam (Screenshot)</option>
+                    <option value="telegram_job">💼 Telegram YouTube Rating Job Scam</option>
+                    <option value="electricity_cut">⚡ Urgent Electricity Disconnection SMS</option>
+                    <option value="fedex_customs">📦 FedEx Customs Narcotics Digital Arrest</option>
+                  </select>
+                  <input type="text" id="hubScamCustomText" placeholder="Or paste suspicious message / SMS / URL text here..." style="flex: 2; min-width: 240px; margin-bottom: 0;">
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                  <button class="btn btn-red" style="flex: 1; min-width: 180px;" onclick="triggerHubScamInvestigation()">Launch Forensic Investigation</button>
+                  <button class="btn btn-ghost" style="width: auto; padding: 8px 16px;" onclick="switchView('chat'); runScamDemo('upi_refund');">Open in Chat</button>
+                </div>
               </div>
             </div>
           </div>

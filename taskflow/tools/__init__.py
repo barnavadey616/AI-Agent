@@ -7,6 +7,13 @@ from taskflow.tools.web_tools import fetch_web_page, search_topics
 from taskflow.tools.data_tools import profile_dataset, clean_dataset, compute_summary_metrics
 from taskflow.tools.notification_tools import export_markdown_report, export_html_report, format_email_draft
 from taskflow.tools.knowledge_tools import query_knowledge_base, add_knowledge_document, list_knowledge_documents
+from taskflow.tools.scam_tools import (
+    extract_scam_entities,
+    analyze_url_threat,
+    match_scam_signatures,
+    compute_scam_risk_score,
+    generate_scam_report,
+)
 
 __all__ = [
     "scan_directory",
@@ -24,4 +31,9 @@ __all__ = [
     "query_knowledge_base",
     "add_knowledge_document",
     "list_knowledge_documents",
+    "extract_scam_entities",
+    "analyze_url_threat",
+    "match_scam_signatures",
+    "compute_scam_risk_score",
+    "generate_scam_report",
 ]

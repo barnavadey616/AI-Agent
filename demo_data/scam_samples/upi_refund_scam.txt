@@ -1,0 +1,5 @@
+[GooglePay / PhonePe Notification]
+Cashback Approved: ₹25,000 has been credited to your rewards account.
+To claim this refund immediately into your bank account, please approve the collect request from merchant handle: refund-claim-dept@ibl
+NOTE: Enter your 6-digit UPI PIN to confirm identity and deposit ₹25,000.
+Valid for 15 minutes only. Call support: 9876543210.

@@ -304,23 +304,90 @@ function useSuggestion(text) {
 }
 
 // ==========================================
+// ScamShield Image & Demo Handlers
+// ==========================================
+
+let currentChatAttachmentBase64 = null;
+let currentChatAttachmentName = null;
+let pendingScamSampleId = null;
+
+function handleScamFileSelected(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  currentChatAttachmentName = file.name;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    currentChatAttachmentBase64 = e.target.result;
+    const preview = document.getElementById("chatAttachmentPreview");
+    const nameEl = document.getElementById("chatAttachmentName");
+    if (preview && nameEl) {
+      nameEl.textContent = file.name;
+      preview.style.display = "inline-flex";
+    }
+    const agentSelector = document.getElementById("chatTargetAgent");
+    if (agentSelector) agentSelector.value = "scamshield";
+
+    const input = document.getElementById("chatInputText");
+    if (input && !input.value.trim()) {
+      input.value = `Investigate attached screenshot: ${file.name}`;
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeChatAttachment() {
+  currentChatAttachmentBase64 = null;
+  currentChatAttachmentName = null;
+  const preview = document.getElementById("chatAttachmentPreview");
+  if (preview) preview.style.display = "none";
+  const fileInput = document.getElementById("scamFileInput");
+  if (fileInput) fileInput.value = "";
+}
+
+function runScamDemo(sampleId) {
+  pendingScamSampleId = sampleId;
+  const agentSelector = document.getElementById("chatTargetAgent");
+  if (agentSelector) agentSelector.value = "scamshield";
+
+  const sampleNames = {
+    upi_refund: "Fake ₹25,000 UPI PIN Cashback Trap (Screenshot)",
+    telegram_job: "Telegram YouTube Rating Job Scam (WhatsApp Chat)",
+    electricity_cut: "Urgent Electricity Disconnection SMS Extortion",
+    fedex_customs: "FedEx Narcotics Digital Arrest Customs Extortion"
+  };
+
+  const input = document.getElementById("chatInputText");
+  if (input) {
+    input.value = `Investigate suspected scam: ${sampleNames[sampleId] || sampleId}`;
+  }
+  submitChatTask();
+}
+
+// ==========================================
 // ChatGPT Task Search & Dispatch
 // ==========================================
 
 async function submitChatTask() {
   const input = document.getElementById("chatInputText");
   const query = input.value.trim();
-  if (!query) return;
+  const imageAttachment = currentChatAttachmentBase64;
+  const imageName = currentChatAttachmentName;
+  const sampleId = pendingScamSampleId;
+
+  if (!query && !imageAttachment && !sampleId) return;
 
   const targetAgent = document.getElementById("chatTargetAgent").value;
   input.value = "";
+  pendingScamSampleId = null;
+  removeChatAttachment();
 
   // Hide hero once chat starts
   const hero = document.getElementById("chatHero");
   if (hero) hero.classList.add("hidden");
 
   // Render User Message
-  appendUserChatMessage(query);
+  appendUserChatMessage(query || "Investigate attached evidence", imageName);
 
   // Render Assistant Message with Loading State
   const assistantBubble = appendAssistantChatMessage();
@@ -332,7 +399,12 @@ async function submitChatTask() {
     const data = await safeJsonFetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: query, target_agent: targetAgent })
+      body: JSON.stringify({
+        query: query || "Investigate suspected scam",
+        target_agent: targetAgent,
+        image_base64: imageAttachment,
+        sample_id: sampleId
+      })
     });
 
     currentChatAccordionBody = null;
@@ -363,18 +435,22 @@ async function submitChatTask() {
     loadArtifacts();
 
   } catch (err) {
-    answerContainer.innerHTML = `<span style="color: #ef4444; font-weight: 500;">?? ${escapeHtml(err.message)}</span>`;
+    answerContainer.innerHTML = `<span style="color: #ef4444; font-weight: 500;">⚠️ ${escapeHtml(err.message)}</span>`;
     currentChatAccordionBody = null;
   }
 }
 
-function appendUserChatMessage(text) {
+function appendUserChatMessage(text, attachmentName = null) {
   const container = document.getElementById("chatMessages");
   const msgDiv = document.createElement("div");
   msgDiv.className = "chat-msg user";
+  const attachBadge = attachmentName
+    ? `<div class="attachment-preview" style="margin-bottom:6px;"><span class="preview-icon">🖼️</span><span>${escapeHtml(attachmentName)}</span></div>`
+    : "";
   msgDiv.innerHTML = `
-    <div class="msg-avatar">??</div>
+    <div class="msg-avatar">👤</div>
     <div class="msg-content">
+      ${attachBadge}
       <p>${escapeHtml(text)}</p>
     </div>
   `;
@@ -387,7 +463,7 @@ function appendAssistantChatMessage() {
   const msgDiv = document.createElement("div");
   msgDiv.className = "chat-msg assistant";
   msgDiv.innerHTML = `
-    <div class="msg-avatar">?</div>
+    <div class="msg-avatar">⚡</div>
     <div class="msg-content">
       <details class="reasoning-accordion" open>
         <summary class="reasoning-summary">
@@ -595,6 +671,34 @@ async function triggerEmailTriage() {
     loadArtifacts();
   } catch (err) {
     logToConsole("tool_call", `Error running email triage: ${err.message}`);
+  }
+}
+
+async function triggerHubScamInvestigation() {
+  const sampleSelect = document.getElementById("hubScamSampleSelect");
+  const customInput = document.getElementById("hubScamCustomText");
+  const sampleId = sampleSelect ? sampleSelect.value : "upi_refund";
+  const customText = customInput ? customInput.value.trim() : "";
+
+  logToConsole("thought", `Launching ScamShield Forensic Investigation (Target: ${customText ? 'Custom Text' : sampleId})...`);
+  try {
+    const payload = {};
+    if (customText) {
+      payload.text = customText;
+    } else if (sampleId) {
+      payload.sample_id = sampleId;
+    }
+
+    const data = await safeJsonFetch("/api/run/scam-shield", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    logToConsole("finish", `🛡️ ScamShield Verdict: ${data.verdict} (Risk: ${data.risk_score}/100) — ${data.primary_pattern}`);
+    loadArtifacts();
+  } catch (err) {
+    logToConsole("tool_call", `Error running ScamShield investigation: ${err.message}`);
   }
 }
 

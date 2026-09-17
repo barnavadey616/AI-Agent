@@ -33,9 +33,18 @@ class RunCustomTaskRequest(BaseModel):
     agent_name: Optional[str] = Field(default="CustomAgent", description="Optional agent display name")
 
 
+class RunScamInvestigationRequest(BaseModel):
+    text: Optional[str] = Field(default=None, description="Raw message, SMS, email, or URL text to investigate")
+    image_base64: Optional[str] = Field(default=None, description="Optional base64-encoded screenshot image")
+    file_path: Optional[str] = Field(default=None, description="Optional server-side file path to inspect")
+    sample_id: Optional[str] = Field(default=None, description="Pre-loaded sample ID (e.g. 'upi_refund', 'telegram_job', 'electricity_cut', 'fedex_customs')")
+
+
 class NaturalTaskRequest(BaseModel):
     query: str = Field(..., description="User instruction or prompt")
     target_agent: Optional[str] = Field(default="auto", description="Target agent key or 'auto'")
+    image_base64: Optional[str] = Field(default=None, description="Optional attached screenshot or document (base64)")
+    sample_id: Optional[str] = Field(default=None, description="Optional pre-configured sample ID")
 
 
 class AddKnowledgeRequest(BaseModel):

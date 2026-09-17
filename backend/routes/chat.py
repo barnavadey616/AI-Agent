@@ -9,6 +9,7 @@ from taskflow.agents.file_organizer import FileOrganizerAgent
 from taskflow.agents.research_agent import ResearchAgent
 from taskflow.agents.data_cleaner import DataCleanerAgent
 from taskflow.agents.email_triage import EmailTriageAgent
+from taskflow.agents.scam_shield import ScamShieldAgent
 from taskflow.core.agent import BaseAgent
 from taskflow.core.knowledge import default_knowledge_base
 from taskflow.tools.file_tools import scan_directory, read_file_snippet
@@ -65,6 +66,17 @@ def process_natural_task(req: NaturalTaskRequest):
         not is_question and any(k in q_lower for k in [
             "triage email", "triage tickets", "triage inquiries", "triage urgent", "triage customer",
             "inquiry:", "ticket:", "subject:", "customer query", "customer queries"
+        ])
+    )
+    is_scam_inquiry = (
+        target_agent in ["scamshield", "scam"]
+        or bool(req.image_base64)
+        or bool(req.sample_id)
+        or any(k in q_lower for k in [
+            "scam", "fraud", "fake upi", "upi refund", "enter upi pin",
+            "is this a scam", "investigate message", "investigate this", "check this link",
+            "telegram job", "courier parcel", "digital arrest", "narcotics found",
+            "power disconnected", "electricity bill", "sbi blocked", "kyc expired", "phishing"
         ])
     )
 
@@ -143,7 +155,39 @@ def process_natural_task(req: NaturalTaskRequest):
             "artifacts": [res.get("report_file")],
         }
 
-    # 5. Conversational AI Assistant (Answering Questions, Coding Help, General Queries)
+    # 5. Dedicated ScamShield Cyber Threat Investigation Action
+    elif (target_agent in ["scamshield", "scam"]) or (target_agent == "auto" and is_scam_inquiry):
+        agent = ScamShieldAgent()
+        agent.add_listener(sync_event_emitter)
+
+        evidence_text = query
+        file_path = None
+        if req.sample_id:
+            samples_dir = config.BASE_DIR / "demo_data" / "scam_samples"
+            if req.sample_id == "upi_refund":
+                file_path = str(samples_dir / "upi_refund_scam.png")
+            elif req.sample_id == "telegram_job":
+                evidence_text = (samples_dir / "telegram_job_scam.txt").read_text(encoding="utf-8")
+            elif req.sample_id == "electricity_cut":
+                evidence_text = (samples_dir / "electricity_cut_sms.txt").read_text(encoding="utf-8")
+            elif req.sample_id == "fedex_customs":
+                evidence_text = (samples_dir / "fedex_customs_phish.txt").read_text(encoding="utf-8")
+
+        res = agent.investigate(
+            text=evidence_text,
+            image_base64=req.image_base64,
+            file_path=file_path
+        )
+        return {
+            "agent": "ScamShieldAgent",
+            "type": "scamshield",
+            "reply": res.get("reply", "Investigation complete."),
+            "artifacts": res.get("artifacts", []),
+            "risk_score": res.get("risk_score", 0),
+            "verdict": res.get("verdict", "UNKNOWN")
+        }
+
+    # 6. Conversational AI Assistant (Answering Questions, Coding Help, General Queries)
     else:
         # Search knowledge base for grounding context
         kb_matches = default_knowledge_base.search(query, top_k=1)
@@ -156,7 +200,9 @@ def process_natural_task(req: NaturalTaskRequest):
             )
 
         # Adapt role based on selected target agent persona
-        if target_agent == "cleaner":
+        if target_agent in ["scamshield", "scam"]:
+            role_name = "Cyber Threat & Scam Forensics Specialist"
+        elif target_agent == "cleaner":
             role_name = "Data Engineering & Analytics Specialist"
         elif target_agent == "organizer":
             role_name = "File Systems & Workflow Automation Specialist"
