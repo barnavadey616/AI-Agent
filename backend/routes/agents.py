@@ -9,6 +9,7 @@ from taskflow.agents.research_agent import ResearchAgent
 from taskflow.agents.data_cleaner import DataCleanerAgent
 from taskflow.agents.email_triage import EmailTriageAgent
 from taskflow.agents.scam_shield import ScamShieldAgent
+from taskflow.agents.amazon_ops import AmazonOpsAgent
 from taskflow.core.agent import BaseAgent
 from backend.models.schemas import (
     RunOrganizerRequest,
@@ -17,6 +18,7 @@ from backend.models.schemas import (
     RunEmailTriageRequest,
     RunCustomTaskRequest,
     RunScamInvestigationRequest,
+    RunAmazonOpsRequest,
 )
 from backend.services.websocket import sync_event_emitter
 
@@ -163,3 +165,93 @@ def run_scam_shield(req: RunScamInvestigationRequest):
         image_base64=evidence_image,
         file_path=file_path
     )
+
+
+AMAZON_SCENARIOS = [
+    {
+        "id": "amz_delays",
+        "title": "📦 Delivery Delays",
+        "name": "Delivery Delays Root-Cause",
+        "category": "Transportation & Logistics",
+        "description": "Analyze order & tracking data, identify carrier delays, and execute autonomous mitigation actions.",
+        "prompt": "Audit middle-mile and last-mile shipments, identify why deliveries are delayed, and suggest autonomous remediation actions."
+    },
+    {
+        "id": "amz_warehouse",
+        "title": "🏭 FC Bottlenecks",
+        "name": "Warehouse Operations & Mechanical Jams",
+        "category": "Fulfillment Centers",
+        "description": "Analyze FC metrics across ONT8, JFK8, ORD4, detect picker rate bottlenecks and conveyor jams.",
+        "prompt": "Analyze warehouse metrics across ONT8, JFK8, and ORD4, detect picker rate bottlenecks and conveyor jams, and dispatch RME directives."
+    },
+    {
+        "id": "amz_customer",
+        "title": "📞 Order Resolution",
+        "name": "Customer Support Investigation",
+        "category": "Customer Trust",
+        "description": "Investigate order status, formulate policy concession under SOP-CS-CONCESS-04, and draft customer reply.",
+        "prompt": "Investigate customer order AMZ-1082-93821, analyze transit history and carrier exception, formulate policy-compliant concession, and draft customer response."
+    },
+    {
+        "id": "amz_returns",
+        "title": "🔄 Returns Analysis",
+        "name": "Reverse Logistics & Defective ASINs",
+        "category": "Reverse Logistics",
+        "description": "Analyze return reasons and identify products and packaging causing high returns.",
+        "prompt": "Analyze return reasons across high-volume catalog products, isolate defective ASINs, and enforce vendor packaging compliance."
+    },
+    {
+        "id": "amz_seller",
+        "title": "📊 Seller Insights",
+        "name": "FBA Inventory Health & Buy Box",
+        "category": "Seller Services",
+        "description": "Audit seller stockouts (<5 days of supply), monitor Buy Box win rate, and calculate reorders.",
+        "prompt": "Audit seller inventory health, identify critical stockouts under 5 days of supply, monitor Buy Box win rate, and calculate reorder quantities."
+    },
+    {
+        "id": "amz_supply_chain",
+        "title": "🚚 Supply Disruptions",
+        "name": "Corridor & Weather Disruption Alerts",
+        "category": "Global Supply Chain",
+        "description": "Monitor NOAA storm events and freight corridors, identify line-haul capacity risks, and reroute trucks.",
+        "prompt": "Monitor external NOAA storm events and interstate freight corridors, identify linehaul capacity risks, and execute automated bypass routing."
+    },
+    {
+        "id": "amz_fraud",
+        "title": "💰 Fraud Detection",
+        "name": "Concession Abuse & E-Commerce Fraud",
+        "category": "Trust & Safety",
+        "description": "Audit order velocity and photo POD scans to flag serial concession abuse and empty-box fraud rings.",
+        "prompt": "Audit order velocity and delivery photo POD scans to flag serial concession abuse and empty-box fraud rings for human investigator review."
+    },
+    {
+        "id": "amz_sops",
+        "title": "👨💻 Internal SOPs",
+        "name": "Authorized Amazon SOP Assistant",
+        "category": "Operations Knowledge Base",
+        "description": "Search authorized company documents and SOPs to guide operational and FC teams.",
+        "prompt": "Search Amazon internal SOPs and guide operational teams on conveyor emergency stops and safe jam clearance protocols."
+    },
+    {
+        "id": "amz_daily_ops",
+        "title": "📝 Daily Ops Report",
+        "name": "Daily Ops & Shift Handoff Briefing",
+        "category": "Executive Operations",
+        "description": "Synthesize cross-network KPIs, FC throughput, and OTD into daily executive shift briefings.",
+        "prompt": "Generate the Amazon Operations Daily Executive Briefing and shift handoff report across network OTD, FC bottlenecks, and mitigation actions."
+    }
+]
+
+
+@agents_router.get("/api/amazon/scenarios")
+def get_amazon_scenarios():
+    """Returns the 9 Amazon Operations and Logistics operational scenarios."""
+    return {"scenarios": AMAZON_SCENARIOS}
+
+
+@agents_router.post("/api/run/amazon-ops")
+def run_amazon_ops(req: RunAmazonOpsRequest):
+    """Execute the Amazon Operations Autonomous Copilot."""
+    agent = AmazonOpsAgent()
+    agent.add_listener(sync_event_emitter)
+    return agent.execute_operation(query=req.query or "", scenario_id=req.scenario_id)

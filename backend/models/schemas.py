@@ -40,6 +40,11 @@ class RunScamInvestigationRequest(BaseModel):
     sample_id: Optional[str] = Field(default=None, description="Pre-loaded sample ID (e.g. 'upi_refund', 'telegram_job', 'electricity_cut', 'fedex_customs')")
 
 
+class RunAmazonOpsRequest(BaseModel):
+    scenario_id: Optional[str] = Field(default=None, description="Amazon operational scenario ID (e.g. 'amz_delays', 'amz_warehouse')")
+    query: Optional[str] = Field(default="", description="Operational audit query or details")
+
+
 class NaturalTaskRequest(BaseModel):
     query: str = Field(..., description="User instruction or prompt")
     target_agent: Optional[str] = Field(default="auto", description="Target agent key or 'auto'")

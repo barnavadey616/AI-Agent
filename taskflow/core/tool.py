@@ -94,12 +94,12 @@ class ToolRegistry:
 default_registry = ToolRegistry()
 
 
-def tool(name: Optional[str] = None, description: Optional[str] = None, registry: Optional[ToolRegistry] = None):
+def tool(name: Optional[str] = None, description: Optional[str] = None, parameters: Optional[Dict[str, Any]] = None, registry: Optional[ToolRegistry] = None):
     """Decorator to convert a function into an Agent Tool."""
     def decorator(func: Callable) -> Tool:
         tool_name = name or func.__name__
         tool_desc = description or (func.__doc__ or "").strip() or f"Executes {tool_name}"
-        t = Tool(name=tool_name, description=tool_desc, func=func)
+        t = Tool(name=tool_name, description=tool_desc, func=func, parameters=parameters)
         target_reg = registry or default_registry
         target_reg.register(t)
         return t

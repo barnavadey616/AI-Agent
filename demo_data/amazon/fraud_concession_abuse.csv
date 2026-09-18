@@ -1,0 +1,7 @@
+order_id,account_id,item_asin,order_value_usd,claim_type,prior_concessions_90d,account_age_days,address_velocity_count,vpn_detected,pod_photo_confirmed,fraud_risk_score,verdict,investigation_notes
+AMZ-FRD-0192,ACCT-8491,B0B12F98Q1,349.99,Item_Missing_Empty_Box,7,14,5,True,True,94.5,CONFIRMED_ABUSE_FLAG,Serial empty box claims on high-value electronics across 5 new addresses in 14 days; carrier photo shows tamper-proof tape intact at front porch
+AMZ-FRD-0193,ACCT-2281,B08N5WRWNW,24.99,Did_Not_Arrive,1,420,1,False,False,18.0,LEGITIMATE_CLAIM,Established 14-month Prime member with clean history; carrier tracking indicates misdelivered GPS coordinate
+AMZ-FRD-0194,ACCT-9932,B09X4KL892,49.99,Wrong_Item_Sent,6,28,4,True,False,82.0,SUSPICIOUS_CONCESSION,6 refund claims in 28 days totaling $480; serial claims on small consumer electronics without return drop-off
+AMZ-FRD-0195,ACCT-5541,B082T2S8F3,189.00,Damaged_In_Transit,0,890,1,False,True,12.0,LEGITIMATE_CLAIM,Prime member provided photo of smashed delivery box with damaged chair armrest
+AMZ-FRD-0196,ACCT-7719,B09B8W2P3R,39.99,Never_Received,9,35,6,True,True,96.0,CONFIRMED_ABUSE_FLAG,Repeated INR claims despite AMZL geo-scan match (lat/long 5 meters from door) and high-res photo delivery verification
+AMZ-FRD-0197,ACCT-1102,B07XJ8C8F5,28.50,Item_Leaked,2,610,1,False,False,22.0,LEGITIMATE_CLAIM,Occasional grocery damage concession within standard acceptable limits

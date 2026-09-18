@@ -1,0 +1,7 @@
+seller_id,seller_name,asin,sku,fba_on_hand,fba_inbound,daily_velocity,days_of_supply,buy_box_pct,stockout_risk_level,recommended_reorder,storage_optimization_note
+SLR-9921,AeroTech Gadgets,B08N5WRWNW,AT-MOUSE-01,140,50,45.0,3.1,88.0,CRITICAL_STOCKOUT,1200,High velocity item will stock out in 72 hours; initiate FBA Priority Inbound
+SLR-9921,AeroTech Gadgets,B09B8W2P3R,AT-QI-PAD-02,820,0,8.0,102.5,42.0,EXCESS_STORAGE_SURCHARGE,0,High return rate (18%) and aging inventory; run 20% coupon to liquidate before aged inventory fee
+SLR-4412,Apex Kitchenware,B07FZ8S74C,AK-BOTTLE-BLK,3400,1000,65.0,52.3,95.0,HEALTHY,1500,Optimal inventory position; standard automated 30-day replenishment
+SLR-4412,Apex Kitchenware,B09L5T4X71,AK-USBC-CBL,90,200,32.0,2.8,74.0,HIGH_STOCKOUT,800,Reorder immediately; competitor gaining Buy Box (+12%) due to low FBA Prime inventory
+SLR-7729,Nordic Office Supplies,B082T2S8F3,NOS-CHAIR-MSH,45,20,15.0,3.0,61.0,CRITICAL_STOCKOUT,350,Losing Buy Box due to regional Prime delivery promises > 3 days
+SLR-1184,Zenith Audio Labs,B0B12F98Q1,ZA-ANC-HEADSET,1200,0,5.0,240.0,31.0,STRANDED_EXCESS,0,Return rate 22% caused Amazon suppressed listing; resolve listing defect audit

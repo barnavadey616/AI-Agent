@@ -418,6 +418,30 @@ function removeChatAttachment() {
   if (fileInput) fileInput.value = "";
 }
 
+function runAmazonScenario(scenarioId) {
+  pendingScamSampleId = scenarioId;
+  const agentSelector = document.getElementById("chatTargetAgent");
+  if (agentSelector) agentSelector.value = "amazon_ops";
+
+  const prompts = {
+    amz_delays: "Audit middle-mile and last-mile shipments, identify why deliveries are delayed, and suggest autonomous remediation actions.",
+    amz_warehouse: "Analyze warehouse metrics across ONT8, JFK8, and ORD4, detect picker rate bottlenecks and conveyor jams, and dispatch RME directives.",
+    amz_customer: "Investigate customer order AMZ-1082-93821, analyze transit history and carrier exception, formulate policy-compliant concession, and draft customer response.",
+    amz_returns: "Analyze return reasons across high-volume catalog products, isolate defective ASINs, and enforce vendor packaging compliance.",
+    amz_seller: "Audit seller inventory health, identify critical stockouts under 5 days of supply, monitor Buy Box win rate, and calculate reorder quantities.",
+    amz_supply_chain: "Monitor external NOAA storm events and interstate freight corridors, identify linehaul capacity risks, and execute automated bypass routing.",
+    amz_fraud: "Audit order velocity and delivery photo POD scans to flag serial concession abuse and empty-box fraud rings for human investigator review.",
+    amz_sops: "Search Amazon internal SOPs and guide operational teams on conveyor emergency stops and safe jam clearance protocols.",
+    amz_daily_ops: "Generate the Amazon Operations Daily Executive Briefing and shift handoff report across network OTD, FC bottlenecks, and mitigation actions."
+  };
+
+  const input = document.getElementById("chatInputText");
+  if (input) {
+    input.value = prompts[scenarioId] || `Execute Amazon Operations scenario: ${scenarioId}`;
+  }
+  submitChatTask();
+}
+
 function runScamDemo(sampleId) {
   pendingScamSampleId = sampleId;
   const agentSelector = document.getElementById("chatTargetAgent");

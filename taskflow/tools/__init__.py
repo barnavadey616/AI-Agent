@@ -14,6 +14,17 @@ from taskflow.tools.scam_tools import (
     compute_scam_risk_score,
     generate_scam_report,
 )
+from taskflow.tools.amazon_tools import (
+    analyze_delivery_delays,
+    detect_warehouse_bottlenecks,
+    investigate_order_and_resolve,
+    analyze_return_anomalies,
+    audit_seller_inventory,
+    monitor_supply_chain_disruptions,
+    scan_ecommerce_fraud,
+    query_amazon_sops,
+    generate_daily_ops_report,
+)
 
 __all__ = [
     "scan_directory",
@@ -36,4 +47,13 @@ __all__ = [
     "match_scam_signatures",
     "compute_scam_risk_score",
     "generate_scam_report",
+    "analyze_delivery_delays",
+    "detect_warehouse_bottlenecks",
+    "investigate_order_and_resolve",
+    "analyze_return_anomalies",
+    "audit_seller_inventory",
+    "monitor_supply_chain_disruptions",
+    "scan_ecommerce_fraud",
+    "query_amazon_sops",
+    "generate_daily_ops_report",
 ]

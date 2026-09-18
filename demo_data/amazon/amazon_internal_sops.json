@@ -1,0 +1,42 @@
+[
+  {
+    "id": "SOP-FC-SAFE-2026",
+    "title": "Amazon Fulfillment Center Operational Safety & Conveyor Jam Protocols",
+    "category": "Warehouse Operations",
+    "tags": ["warehouse", "safety", "conveyor", "jam", "fc_operations", "ont8", "jfk8"],
+    "summary": "Mandatory safety standards for managing mechanical conveyor jams, sortation line bottlenecks, and picker physical safety in Amazon Fulfillment Centers.",
+    "content": "Amazon Fulfillment Center Standard Operating Procedure (SOP-FC-SAFE-2026):\n1. Mechanical Conveyor Jams: In the event of an automated flow engineering (AFE) or chute jam, associates MUST NOT reach past safety barriers or infrared light curtains. Station operators must activate E-Stop Line 4 immediately.\n2. Area Readiness: Maintenance operations (RME) must be dispatched if dwell time exceeds 15 minutes or queue depth exceeds 200% of nominal capacity.\n3. Dynamic Line Balancing: If pack station buffer exceeds 250 units (e.g. ONT8 PACK_14 or DFW7 SORT_06), Flow Control must divert 40% of inbound totes to secondary buffer lines to prevent line gridlock.\n4. PIT (Powered Industrial Truck) Speed Restrictions: Maximum 5 mph in pedestrian-shared aisles. Mandatory horn honk at blind intersections."
+  },
+  {
+    "id": "SOP-CS-CONCESS-04",
+    "title": "Amazon Customer Service Order Resolution & Concession Authorization Matrix",
+    "category": "Customer Support",
+    "tags": ["customer_support", "concession", "refund", "wismo", "order_resolution", "pod"],
+    "summary": "Policy guidelines for investigating WISMO (Where Is My Order) tickets, lost in transit packages, and authorized concession refunds vs replacements.",
+    "content": "Amazon Customer Service Standard Operating Procedure (SOP-CS-CONCESS-04):\n1. Package Delayed in Transit (>24h past promised date): If carrier scan indicates severe weather or sort center jam, issue immediate empathetic update and offer customer choice of free one-day replacement dispatch or full refund if time-sensitive.\n2. Proof of Delivery (POD) Photo Verification: If tracking indicates 'Delivered' with photo matching customer property and GPS within 15 meters, review customer 90-day concession history. If concession count <= 2, authorize courtesy replacement. If concession count >= 5, escalate to Buyer Abuse Investigation (TRMS) before concession.\n3. High-Value Electronics (>$250): Require police report filing number or carrier physical investigation before unverified empty-box concession is issued."
+  },
+  {
+    "id": "SOP-AMZL-DISPATCH-11",
+    "title": "Amazon Logistics (AMZL) Last-Mile Priority Re-Routing Protocol",
+    "category": "Delivery Logistics",
+    "tags": ["delivery", "delays", "amzl", "logistics", "routing", "weather"],
+    "summary": "Protocol for dynamic rerouting of packages delayed by middle-mile capacity bottlenecks or regional weather alerts.",
+    "content": "Amazon Logistics Standard Operating Procedure (SOP-AMZL-DISPATCH-11):\n1. Middle-Mile Bottleneck Response: When sort center dwell time at key regional hubs (e.g., ONT8, ORD4) exceeds 12 hours, AMZL Dispatch must initiate Secondary Hub Bypass.\n2. Carrier Shift: Transfer affected Priority/Same-Day volume to dedicated AMZL DSP (Delivery Service Partner) fleets rather than third-party standard line-haul.\n3. Weather Impact Mitigation: For packages traversing blizzard-impacted corridors (e.g., I-80 Midwest corridor), automatically notify affected Prime members with updated delivery expectation and route critical medical/grocery packages via Southern rail/air lanes."
+  },
+  {
+    "id": "SOP-REVERSE-LOG-09",
+    "title": "Reverse Logistics Quality Audits & Defective ASIN Quarantine",
+    "category": "Returns",
+    "tags": ["returns", "reverse_logistics", "asin", "defective", "quality", "vendor"],
+    "summary": "Standards for auditing product return reason codes, vendor chargebacks, and suppressing defective listings.",
+    "content": "Amazon Reverse Logistics Standard Operating Procedure (SOP-REVERSE-LOG-09):\n1. ASIN Return Rate Threshold: Any catalog ASIN with a 30-day return rate exceeding 15.0% (with minimum 100 returns) automatically enters Yellow Warning status.\n2. Root Cause Classification: If >50% of returns cite 'DEFECTIVE_NOT_WORKING' or 'BLUETOOTH_DISCONNECT' (e.g., B08N5WRWNW), trigger immediate physical lot inspection at returns processing center.\n3. Misleading PDP Suppression: If returns cite 'INACCURATE_PDP_DESCRIPTION', notify vendor within 24 hours. If uncorrected within 7 days, suppress Buy Box eligibility to protect Amazon customer trust."
+  },
+  {
+    "id": "SOP-SUPPLY-DISRUPT-02",
+    "title": "Amazon Supply Chain Severe Weather & Transit Corridor Continuity Plan",
+    "category": "Supply Chain",
+    "tags": ["supply_chain", "disruptions", "weather", "linehaul", "continuity"],
+    "summary": "Emergency response procedures for multi-state line-haul interruptions, winter blizzards, and port closures.",
+    "content": "Amazon Global Supply Chain Continuity Plan (SOP-SUPPLY-DISRUPT-02):\n1. Trigger Level 2 (Corridor Freeze): When NOAA issues Blizzard or Severe Ice warnings covering >200 miles of interstate corridors (e.g., I-80 across Illinois/Indiana), re-route East-West line-haul freight via I-70/I-40 corridors.\n2. Safety Stock Rebalancing: Release 15% safety stock reserves at destination sort centers (DNY4, DPA1, DCH2) to maintain local Prime Same-Day availability without cross-country transit dependencies.\n3. Vendor Lead-Time Adjustments: Automatically adjust supplier PO fulfillment windows by +48 hours to prevent supplier SLA penalties during weather emergencies."
+  }
+]

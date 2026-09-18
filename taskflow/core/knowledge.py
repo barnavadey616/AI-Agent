@@ -109,6 +109,7 @@ class KnowledgeBase:
                 self._seed_default_knowledge()
         else:
             self._seed_default_knowledge()
+        self.seed_amazon_sops()
         self._backfill_embeddings()
 
     def _save_index(self):
@@ -225,6 +226,37 @@ class KnowledgeBase:
             
         self._save_index()
         logger.info(f"Seeded {len(seeds)} default knowledge documents.")
+        self.seed_amazon_sops()
+
+    def seed_amazon_sops(self):
+        """Seed authorized Amazon internal operational SOPs from demo_data/amazon/amazon_internal_sops.json."""
+        sops_path = config.BASE_DIR / "demo_data" / "amazon" / "amazon_internal_sops.json"
+        if not sops_path.exists():
+            return
+        try:
+            with open(sops_path, "r", encoding="utf-8") as f:
+                sops = json.load(f)
+            updated = False
+            for s in sops:
+                doc_id = s.get("id", f"sop_{len(self.documents)}")
+                if doc_id not in self.documents:
+                    doc_text = f"title: {s['title']} | text: {s['content']}"
+                    embedding = self._generate_embedding(doc_text)
+                    doc = KnowledgeDocument(
+                        doc_id=doc_id,
+                        title=s["title"],
+                        category=s.get("category", "Amazon Operations"),
+                        content=s["content"],
+                        tags=s.get("tags", ["amazon", "sop"]),
+                        embedding=embedding
+                    )
+                    self.documents[doc_id] = doc
+                    updated = True
+            if updated:
+                self._save_index()
+                logger.info("Successfully seeded Amazon internal operational SOPs into knowledge base.")
+        except Exception as e:
+            logger.error(f"Failed to seed Amazon SOPs: {e}")
 
     def add_document(
         self,

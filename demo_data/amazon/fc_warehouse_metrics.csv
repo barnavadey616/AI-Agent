@@ -1,0 +1,12 @@
+fc_code,zone,station_id,queue_depth,target_queue,picker_rate_uph,target_uph,dwell_time_mins,conveyor_load_pct,conveyor_jam,active_workers,status,bottleneck_cause
+ONT8,Inbound_Dock,DOCK_03,420,120,45,95,145,98.2,True,12,CRITICAL,Inbound trailer congestion & scan gun firmware desync
+ONT8,AFE_Pack,PACK_14,310,90,62,110,88,94.5,False,18,WARNING,Automated tape dispenser mechanical jam
+ONT8,AR_Stow,STOW_02,85,90,105,100,24,65.0,False,22,NORMAL,Optimal flow
+JFK8,Pick_Module,PICK_08,290,100,74,120,72,89.0,False,16,WARNING,High volume of oversized heavy items in North Pod
+JFK8,Sort_Center,SORT_01,110,120,130,125,18,68.0,False,25,NORMAL,Optimal flow
+ORD4,Cold_Storage,COLD_04,195,80,58,90,110,91.0,False,10,WARNING,Dry ice replenishment delay and refrigeration door seal check
+ORD4,Outbound_Dock,DOCK_09,510,150,42,100,160,99.5,True,14,CRITICAL,Line-haul carrier IND4 missed dispatch cutoff due to I-80 weather
+BFI4,Singles_Pack,PACK_03,95,100,115,110,21,62.0,False,20,NORMAL,Optimal flow
+BFI4,Multi_Pack,PACK_09,240,110,81,115,65,84.0,False,15,WARNING,Dunnage dispenser empty on line 9
+DFW7,AR_Stow,STOW_05,75,90,112,105,19,58.0,False,24,NORMAL,Optimal flow
+DFW7,AFE_Sort,SORT_06,340,130,78,135,95,96.0,True,17,CRITICAL,Sensor calibration error on chute 12 divert belt

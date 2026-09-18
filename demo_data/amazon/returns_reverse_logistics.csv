@@ -1,0 +1,9 @@
+asin,product_title,category,units_sold,units_returned,return_rate_pct,primary_reason_code,secondary_reason_code,disposition,customer_feedback_snippet
+B09X4KL892,Echo Dot Gen 5 Smart Speaker - Charcoal,Electronics,14200,426,3.0,NO_LONGER_NEEDED,UNWANTED_GIFT,Return_To_FBA_Inventory,Bought two by accident during Prime Day
+B08N5WRWNW,Wireless Ergonomic Bluetooth Mouse,Office_Tech,3800,760,20.0,DEFECTIVE_NOT_WORKING,BLUETOOTH_DISCONNECT,Liquidate_Vendor_Chargeback,Loses Bluetooth connection every 15 minutes; scroll wheel squeaks
+B07XJ8C8F5,Organic Cold-Pressed Olive Oil 1L,Grocery,6100,91,1.5,ARRIVED_DAMAGED,LEAKING_BOTTLE,Destroy_Customer_Refund,Cap cracked during transit; oil leaked on box
+B09B8W2P3R,Ultra-Slim Fast Qi Wireless Charger Pad,Electronics,2900,522,18.0,DEFECTIVE_OVERHEATING,INACCURATE_PDP_DESCRIPTION,Liquidate_Vendor_Chargeback,Overheats iPhone 15 and stops charging after 20 minutes
+B082T2S8F3,Amazon Basics Ergonomic Mesh Office Chair,Furniture,4500,270,6.0,HARD_TO_ASSEMBLE,MISSING_BOLTS,Refurbish_Warehouse_Deal,Instructions were missing step 4; assembly tool stripped
+B0B12F98Q1,Noise Cancelling Over-Ear Headphones,Electronics,1900,418,22.0,DEFECTIVE_AUDIO_STATIC,INACCURATE_PDP_DESCRIPTION,Vendor_Chargeback_Investigation,Severe static hiss in left earcup when ANC is enabled; description claimed 40dB reduction
+B07FZ8S74C,Stainless Steel Insulated Water Bottle 32oz,Kitchen,8900,178,2.0,WRONG_COLOR_SENT,NO_LONGER_NEEDED,Return_To_FBA_Inventory,Ordered matte black got navy blue
+B09L5T4X71,USB-C to HDMI 4K 60Hz Adapter Cable,Electronics,5200,884,17.0,NOT_COMPATIBLE,DEFECTIVE_NO_DISPLAY,Liquidate_Vendor_Chargeback,Does not display 4K on MacBook Air M2 as advertised in title

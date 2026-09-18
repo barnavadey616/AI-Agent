@@ -216,7 +216,7 @@
           </div>
           <div>
             <h1>F.R.Y.D.A.Y</h1>
-            <span class="tagline">Next-Gen Autonomous AI Operations</span>
+            <span class="tagline">Amazon Operations Command Center • F.R.Y.D.A.Y Neural Core</span>
           </div>
         </div>
       </div>
@@ -287,9 +287,9 @@
 
         <!-- Hero Section (Shown initially or above conversation) -->
         <div class="chatgpt-hero" id="chatHero">
-          <div class="hero-badge">⚡ Autonomous Agent Engine</div>
-          <h2>What repetitive task should I automate?</h2>
-          <p>Instruct the AI agent in natural language. F.R.Y.D.A.Y analyzes your intent, selects specialized tools, and outputs clean deliverables.</p>
+          <div class="hero-badge">📦 AWS & Amazon Operations Autonomous Agent</div>
+          <h2>Amazon Operations Command Center</h2>
+          <p>Autonomous AI copilot powered by F.R.Y.D.A.Y Neural Core. Auditing real-time delivery delays, fulfillment center bottlenecks, customer order resolutions, reverse logistics, seller stockouts, supply chain disruptions, fraud detection, and internal SOP guidance.</p>
         </div>
 
         <!-- Chat Conversation Messages -->
@@ -312,6 +312,7 @@
                 <span class="selector-label">Target Agent:</span>
                 <select id="chatTargetAgent">
                   <option value="auto" selected>✨ Auto-Detect Agent</option>
+                  <option value="amazon_ops">📦 Amazon Operations & Logistics Agent</option>
                   <option value="scamshield">🛡️ ScamShield — Fraud & Scam Investigator</option>
                   <option value="organizer">📂 Document & Inbox Organizer</option>
                   <option value="research">🌐 Research Briefing Agent</option>
@@ -333,7 +334,7 @@
             <textarea 
               id="chatInputText" 
               rows="2" 
-              placeholder="Ask F.R.Y.D.A.Y to automate tasks, or investigate suspicious SMS, UPI requests, or links..."></textarea>
+              placeholder="Ask Amazon Operations Copilot, investigate delivery delays, warehouse jams, order issues, fraud..."></textarea>
 
             <!-- Bottom Actions -->
             <div class="input-footer-bar">
@@ -355,6 +356,52 @@
                   <line x1="12" y1="19" x2="12" y2="5"></line>
                   <polyline points="5 12 12 5 19 12"></polyline>
                 </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Amazon Operations 9-Scenario Showcase Bar (1-Click Run) -->
+          <div class="amazon-ops-showcase" id="amazonOpsShowcase">
+            <div class="amazon-showcase-title">
+              <span class="amazon-icon">⚡</span>
+              <span>Amazon Operations Command Bar (1-Click Run):</span>
+            </div>
+            <div class="amazon-chips-grid">
+              <button type="button" class="amazon-chip" onclick="runAmazonScenario('amz_delays')" title="Audit middle-mile & last-mile delivery delays">
+                <span class="chip-icon">📦</span>
+                <span class="chip-label">Delivery Delays</span>
+              </button>
+              <button type="button" class="amazon-chip" onclick="runAmazonScenario('amz_warehouse')" title="Detect FC bottlenecks & conveyor jams (ONT8, JFK8)">
+                <span class="chip-icon">🏭</span>
+                <span class="chip-label">FC Bottlenecks</span>
+              </button>
+              <button type="button" class="amazon-chip" onclick="runAmazonScenario('amz_customer')" title="Investigate customer order & formulate concession">
+                <span class="chip-icon">📞</span>
+                <span class="chip-label">Order Resolution</span>
+              </button>
+              <button type="button" class="amazon-chip" onclick="runAmazonScenario('amz_returns')" title="Analyze return reasons & defective ASINs">
+                <span class="chip-icon">🔄</span>
+                <span class="chip-label">Returns Analysis</span>
+              </button>
+              <button type="button" class="amazon-chip" onclick="runAmazonScenario('amz_seller')" title="Audit FBA inventory health & Buy Box">
+                <span class="chip-icon">📊</span>
+                <span class="chip-label">Seller Insights</span>
+              </button>
+              <button type="button" class="amazon-chip" onclick="runAmazonScenario('amz_supply_chain')" title="Monitor severe weather & freight corridors">
+                <span class="chip-icon">🚚</span>
+                <span class="chip-label">Supply Disruptions</span>
+              </button>
+              <button type="button" class="amazon-chip" onclick="runAmazonScenario('amz_fraud')" title="Audit order velocity & concession abuse">
+                <span class="chip-icon">💰</span>
+                <span class="chip-label">Fraud Detection</span>
+              </button>
+              <button type="button" class="amazon-chip" onclick="runAmazonScenario('amz_sops')" title="Query authorized Amazon internal SOPs">
+                <span class="chip-icon">👨‍💻</span>
+                <span class="chip-label">Internal SOPs</span>
+              </button>
+              <button type="button" class="amazon-chip" onclick="runAmazonScenario('amz_daily_ops')" title="Synthesize daily operations briefing">
+                <span class="chip-icon">📝</span>
+                <span class="chip-label">Daily Ops Report</span>
               </button>
             </div>
           </div>

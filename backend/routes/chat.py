@@ -10,6 +10,7 @@ from taskflow.agents.research_agent import ResearchAgent
 from taskflow.agents.data_cleaner import DataCleanerAgent
 from taskflow.agents.email_triage import EmailTriageAgent
 from taskflow.agents.scam_shield import ScamShieldAgent
+from taskflow.agents.amazon_ops import AmazonOpsAgent
 from taskflow.core.agent import BaseAgent
 from taskflow.core.knowledge import default_knowledge_base
 from taskflow.tools.file_tools import scan_directory, read_file_snippet
@@ -68,16 +69,31 @@ def process_natural_task(req: NaturalTaskRequest):
             "inquiry:", "ticket:", "subject:", "customer query", "customer queries"
         ])
     )
-    is_scam_inquiry = (
-        target_agent in ["scamshield", "scam"]
-        or bool(req.image_base64)
-        or bool(req.sample_id)
+    is_amazon_inquiry = (
+        target_agent in ["amazon", "amazon_ops", "logistics", "ops"]
+        or (bool(req.sample_id) and req.sample_id.startswith("amz_"))
         or any(k in q_lower for k in [
-            "scam", "fraud", "fake upi", "upi refund", "enter upi pin",
-            "is this a scam", "investigate message", "investigate this", "check this link",
-            "telegram job", "courier parcel", "digital arrest", "narcotics found",
-            "power disconnected", "electricity bill", "sbi blocked", "kyc expired", "phishing"
+            "amazon", "delivery delay", "delayed delivery", "transit delay",
+            "warehouse bottleneck", "conveyor jam", "picker rate", "fulfillment center",
+            "ont8", "jfk8", "ord4", "dfw7", "bfi4", "wismo", "where is my order",
+            "return rate", "reverse logistics", "defective asin", "buy box",
+            "stockout", "fba inventory", "linehaul", "freight delay", "supply chain disruption",
+            "concession abuse", "amazon sop", "shift handoff",
+            "operations report", "daily ops report", "amazon operations"
         ])
+    )
+    is_scam_inquiry = (
+        not is_amazon_inquiry and (
+            target_agent in ["scamshield", "scam"]
+            or bool(req.image_base64)
+            or (bool(req.sample_id) and not req.sample_id.startswith("amz_"))
+            or any(k in q_lower for k in [
+                "scam", "fraud", "fake upi", "upi refund", "enter upi pin",
+                "is this a scam", "investigate message", "investigate this", "check this link",
+                "telegram job", "courier parcel", "digital arrest", "narcotics found",
+                "power disconnected", "electricity bill", "sbi blocked", "kyc expired", "phishing"
+            ])
+        )
     )
 
     # 1. Dedicated File Organizer Action
@@ -187,7 +203,20 @@ def process_natural_task(req: NaturalTaskRequest):
             "verdict": res.get("verdict", "UNKNOWN")
         }
 
-    # 6. Conversational AI Assistant (Answering Questions, Coding Help, General Queries)
+    # 6. Dedicated Amazon Operations & Logistics Copilot Action
+    elif (target_agent in ["amazon", "amazon_ops", "logistics", "ops"]) or (target_agent == "auto" and is_amazon_inquiry):
+        agent = AmazonOpsAgent()
+        agent.add_listener(sync_event_emitter)
+        res = agent.execute_operation(query=query, scenario_id=req.sample_id)
+        return {
+            "agent": "AmazonOpsAgent",
+            "type": res.get("type", "amazon_ops"),
+            "reply": res.get("reply", "Operations audit complete."),
+            "artifacts": res.get("artifacts", []),
+            "data": res.get("data", {}),
+        }
+
+    # 7. Conversational AI Assistant (Answering Questions, Coding Help, General Queries)
     else:
         # Search knowledge base for grounding context
         kb_matches = default_knowledge_base.search(query, top_k=1)
@@ -202,6 +231,8 @@ def process_natural_task(req: NaturalTaskRequest):
         # Adapt role based on selected target agent persona
         if target_agent in ["scamshield", "scam"]:
             role_name = "Cyber Threat & Scam Forensics Specialist"
+        elif target_agent in ["amazon", "amazon_ops", "logistics", "ops"]:
+            role_name = "Amazon Global Operations, Logistics & Supply Chain Specialist"
         elif target_agent == "cleaner":
             role_name = "Data Engineering & Analytics Specialist"
         elif target_agent == "organizer":
