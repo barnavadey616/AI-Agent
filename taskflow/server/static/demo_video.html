@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>F.R.Y.D.A.Y — Official Video Demonstration & Walkthrough</title>
+  <link rel="stylesheet" href="style.css?v=20260919_v10">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #060b1c;
+      color: #f1f5f9;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .video-page-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 80px 20px;
+    }
+
+    .video-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(0, 242, 254, 0.2);
+    }
+
+    .video-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #00f2fe;
+      letter-spacing: 0.5px;
+      margin: 0;
+    }
+
+    .brand-sub {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin: 2px 0 0 0;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 12px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .btn-home {
+      background: rgba(15, 23, 42, 0.8);
+      border-color: rgba(56, 189, 248, 0.3);
+      color: #7dd3fc;
+    }
+    .btn-home:hover {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: #00f2fe;
+      color: #ffffff;
+      transform: translateY(-2px);
+    }
+
+    .btn-download {
+      background: linear-gradient(135deg, #ff9900, #d97706);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(255, 153, 0, 0.35);
+    }
+    .btn-download:hover {
+      box-shadow: 0 6px 20px rgba(255, 153, 0, 0.55);
+      transform: translateY(-2px);
+    }
+
+    .video-hero-card {
+      background: rgba(11, 19, 43, 0.85);
+      border: 1px solid rgba(0, 242, 254, 0.35);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 242, 254, 0.15);
+      margin-bottom: 32px;
+    }
+
+    .video-player-wrapper {
+      position: relative;
+      width: 100%;
+      background: #020617;
+      aspect-ratio: 16 / 9;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      display: block;
+      outline: none;
+      object-fit: contain;
+    }
+
+    .video-info-bar {
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(7, 13, 30, 0.95);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .video-meta h2 {
+      margin: 0 0 6px 0;
+      font-size: 1.25rem;
+      color: #ffffff;
+    }
+
+    .video-meta p {
+      margin: 0;
+      font-size: 0.86rem;
+      color: #94a3b8;
+    }
+
+    .chapters-grid-section {
+      margin-top: 32px;
+    }
+
+    .section-heading {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #00f2fe;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chapters-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 14px;
+    }
+
+    .chapter-card {
+      background: rgba(13, 22, 48, 0.75);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 14px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .chapter-card:hover {
+      background: rgba(0, 242, 254, 0.12);
+      border-color: #00f2fe;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0, 242, 254, 0.2);
+    }
+
+    .chapter-timestamp {
+      background: rgba(0, 242, 254, 0.15);
+      color: #38bdf8;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      white-space: nowrap;
+    }
+
+    .chapter-details h4 {
+      margin: 0 0 4px 0;
+      font-size: 0.94rem;
+      color: #ffffff;
+    }
+
+    .chapter-details p {
+      margin: 0;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 768px) {
+      .video-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .header-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+      .chapters-list {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="video-page-container">
+    <!-- Header -->
+    <header class="video-header">
+      <div class="video-brand">
+        <div style="font-size: 28px;">⚡</div>
+        <div>
+          <h1 class="brand-title">F.R.Y.D.A.Y</h1>
+          <p class="brand-sub">Amazon Operations Autonomous Copilot • Official Video Walkthrough</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <a href="/" class="btn-action btn-home">
+          <span>← Back to Command Center</span>
+        </a>
+        <a href="/FRYDAY_Project_Demo_Walkthrough.mp4" download="FRYDAY_Project_Demo_Walkthrough.mp4" class="btn-action btn-download">
+          <span>📥 Download Video (MP4)</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Video Hero Card -->
+    <section class="video-hero-card">
+      <div class="video-player-wrapper">
+        <video id="mainDemoVideo" controls autoplay preload="auto">
+          <source src="FRYDAY_Project_Demo_Walkthrough.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <div class="video-info-bar">
+        <div class="video-meta">
+          <h2>F.R.Y.D.A.Y: End-to-End Autonomous AI Operations Demo</h2>
+          <p>Full narrated walkthrough explaining the 9 Amazon operational capabilities, multi-agent ReAct loop, telemetry audits, and cloud deployment.</p>
+        </div>
+        <div>
+          <a href="/FRYDAY_Amazon_Operations_AI_Agent_Presentation.pptx" download class="btn-action btn-home">
+            <span>📊 Download Slides (PPTX)</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapters Navigation -->
+    <section class="chapters-grid-section">
+      <div class="section-heading">
+        <span>⏱️</span>
+        <span>Interactive Video Chapters (Click to Jump)</span>
+      </div>
+      <div class="chapters-list">
+        <div class="chapter-card" onclick="seekTo(0)">
+          <span class="chapter-timestamp">00:00</span>
+          <div class="chapter-details">
+            <h4>1. Introduction & Vision</h4>
+            <p>Welcome to F.R.Y.D.A.Y: Next-Gen Autonomous AI Operations for Amazon.</p>
+          </div>
+        </div>
+
+        <div class="chapter-card" onclick="seekTo(14)">
+          <span class="chapter-timestamp">00:14</span>
+          <div class="chapter-details">
+            <h4>2. Why Generic AI Fails in Global Operations</h4>
+            <p>The trap of conversational chatbots vs. action-oriented telemetry copilots.</p>
+          </div>
+        </div>
+
+        <div class="chapter-card" onclick="seekTo(29)">
+          <span class="chapter-timestamp">00:29</span>
+          <div class="chapter-details">
+            <h4>3. System Architecture & ReAct Loop</h4>
+            <p>FastAPI, WebSockets, Gemini 2.5 Flash, and hybrid RAG with authorized SOPs.</p>
+          </div>
+        </div>
+
+        <div class="chapter-card" onclick="seekTo(46)">
+          <span class="chapter-timestamp">00:46</span>
+          <div class="chapter-details">
+            <h4>4. The 9 Amazon Operational Capabilities</h4>
+            <p>Full matrix: delivery delays, warehouse jams, concessions, returns, and fraud.</p>
+          </div>
+        </div>
+
+        <div class="chapter-card" onclick="seekTo(63)">
+          <span class="chapter-timestamp">01:03</span>
+          <div class="chapter-details">
+            <h4>5. Live Audit: Delays & FC Conveyor Jams</h4>
+            <p>Isolating ONT8 sort jams, AMZL hub bypass, and RME technician dispatches.</p>
+          </div>
+        </div>
+
+        <div class="chapter-card" onclick="seekTo(81)">
+          <span class="chapter-timestamp">01:21</span>
+          <div class="chapter-details">
+            <h4>6. Customer Concessions & Defective ASINs</h4>
+            <p>SOP-CS-CONCESS-04 courtesy credits and SOP-REVERSE-LOG-09 Buy Box suppression.</p>
+          </div>
+        </div>
+
+        <div class="chapter-card" onclick="seekTo(99)">
+          <span class="chapter-timestamp">01:38</span>
+          <div class="chapter-details">
+            <h4>7. Supply Chain Weather Routing & Fraud</h4>
+            <p>Rerouting 42 trucks around I-80 blizzard and neutralizing empty-box refund fraud.</p>
+          </div>
+        </div>
+
+        <div class="chapter-card" onclick="seekTo(117)">
+          <span class="chapter-timestamp">01:57</span>
+          <div class="chapter-details">
+            <h4>8. Futuristic Stark UI & 24/7 Cloud Reliability</h4>
+            <p>Spinning Arc Reactor, iPhone fluid physics, Render deployment & 47/47 passing tests.</p>
+          </div>
+        </div>
+
+        <div class="chapter-card" onclick="seekTo(133)">
+          <span class="chapter-timestamp">02:13</span>
+          <div class="chapter-details">
+            <h4>9. Conclusion & Live Access Links</h4>
+            <p>Live deployment at ai-agent-pr00.onrender.com and GitHub repository access.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function seekTo(seconds) {
+      const video = document.getElementById("mainDemoVideo");
+      if (video) {
+        video.currentTime = seconds;
+        video.play();
+        window.scrollTo({ top: 120, behavior: "smooth" });
+      }
+    }
+  </script>
+</body>
+</html>

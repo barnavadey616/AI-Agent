@@ -17,3 +17,4 @@ outputs/logs/
 outputs/*.html
 outputs/*.md
 demo_data/organized/
+scratch/

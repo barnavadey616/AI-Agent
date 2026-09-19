@@ -221,8 +221,12 @@
         </div>
       </div>
 
-      <!-- Top Right Authentication / Login -->
+      <!-- Top Right Authentication & Video Demo -->
       <div class="nav-auth" id="navAuth">
+        <a href="/demo_video.html" class="btn-video-nav" title="Watch Full Project Video Demo">
+          <span class="video-icon">🎥</span>
+          <span class="video-text">Video Demo</span>
+        </a>
         <button class="btn-login" id="btnLogin" onclick="openLoginModal()" title="Sign in to F.R.Y.D.A.Y">
           <span class="login-icon">👤</span>
           <span class="login-text">Login</span>
@@ -363,8 +367,13 @@
           <!-- Amazon Operations 9-Scenario Showcase Bar (1-Click Run) -->
           <div class="amazon-ops-showcase" id="amazonOpsShowcase">
             <div class="amazon-showcase-title">
-              <span class="amazon-icon">⚡</span>
-              <span>Amazon Operations Command Bar (1-Click Run):</span>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="amazon-icon">⚡</span>
+                <span>Amazon Operations Command Bar (1-Click Run):</span>
+              </div>
+              <a href="/demo_video.html" class="video-showcase-link" title="Watch Full Narrated Video Demo Walkthrough">
+                <span>🎥 Watch Video Demo ↗</span>
+              </a>
             </div>
             <div class="amazon-chips-grid">
               <button type="button" class="amazon-chip" onclick="runAmazonScenario('amz_delays')" title="Audit middle-mile & last-mile delivery delays">
