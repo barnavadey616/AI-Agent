@@ -24,7 +24,26 @@ from backend.routes import (
 async def lifespan(app: FastAPI):
     """Manage application startup and graceful shutdown."""
     config.ensure_directories()
+    def _render_keep_alive_ping():
+        """Periodically pings the public Render endpoint to keep the instance active and prevent idle spin-down."""
+        import urllib.request
+        try:
+            req = urllib.request.Request(
+                "https://ai-agent-pr00.onrender.com/api/status",
+                headers={"User-Agent": "FRYDAY-Internal-Heartbeat/1.0"}
+            )
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                pass
+        except Exception:
+            pass
+
     # Register default periodic jobs
+    scheduler.add_job(
+        name="Render Keep-Alive Heartbeat",
+        interval_seconds=600,
+        task_func=_render_keep_alive_ping,
+        description="Pings public Render endpoint every 10 minutes to maintain warm instance and eliminate cold-start loading screen",
+    )
     scheduler.add_job(
         name="Hourly Data Health Audit",
         interval_seconds=3600,

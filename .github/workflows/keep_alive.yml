@@ -1,0 +1,34 @@
+name: Keep Render Service Awake (Zero Cold-Start)
+
+on:
+  schedule:
+    # Run every 10 minutes to prevent Render's 15-minute inactivity spin-down
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions UI
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    name: Heartbeat Ping
+    steps:
+      - name: Ping Render Web Service
+        run: |
+          echo "======================================================="
+          echo "Sending automated heartbeat ping to Render..."
+          TARGET_URL="https://ai-agent-pr00.onrender.com/api/status"
+          echo "Target: $TARGET_URL"
+          
+          # Perform HTTP request with timeout and output status code
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 45 "$TARGET_URL" || echo "000")
+          echo "Render HTTP Response Code: $HTTP_STATUS"
+          
+          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 400 ]; then
+            echo "SUCCESS: Render instance is active and warm. Zero cold-start delay."
+          else
+            echo "WARNING: Render returned status $HTTP_STATUS. Waking instance up..."
+            # Retry once after 10 seconds in case it was cold
+            sleep 10
+            RETRY_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 45 "$TARGET_URL" || echo "000")
+            echo "Retry HTTP Response Code: $RETRY_STATUS"
+          fi
+          echo "======================================================="
